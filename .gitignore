@@ -1,0 +1,5 @@
+# HTTrack temporary cache and logs
+hts-cache/
+hts-log.txt
+cookies.txt
+*.original.html
