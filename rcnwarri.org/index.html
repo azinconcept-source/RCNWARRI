@@ -1,722 +1,349 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>RCN Warri — Remnant Christian Network</title>
   <meta name="description" content="Remnant Christian Network Warri — Striving towards the rebirth of Apostolic Christianity. Raise, Restore, Revive, Renew.">
-  <link rel="icon" href="wp-content/uploads/2023/02/rcnwarri-fav-1-100x100.png" sizes="32x32">
+  <link rel="icon" href="../images/rcn-logo.png">
 
-  <!-- Google Fonts: Anton (Primary Hero Font), Inter, Montserrat, JetBrains Mono -->
+  <!-- Fonts: Anton (local + Google fallback), Inter -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@300;400;500;600;700;800;900&family=Montserrat:ital,wght@0,700;0,800;0,900;1,800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-  <!-- Tailwind CSS via CDN -->
+  <!-- Tailwind (utility classes for content blocks) -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          colors: {
-            border: "hsl(240 5.9% 90%)",
-            background: "#ffffff",
-            foreground: "#09090b",
-            primary: {
-              DEFAULT: "#18181b",
-              foreground: "#fafafa",
-            },
-            secondary: {
-              DEFAULT: "#f4f4f5",
-              foreground: "#18181b",
-            },
-            accent: {
-              DEFAULT: "#2563eb",
-              foreground: "#ffffff",
-            }
-          },
-          fontFamily: {
-            anton: ['Anton', 'sans-serif'],
-            sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
-            montserrat: ['Montserrat', 'sans-serif'],
-            mono: ['JetBrains Mono', 'monospace']
-          }
-        }
-      }
+      theme: { extend: { fontFamily: { anton: ['Anton', 'Impact', 'sans-serif'], sans: ['Inter', 'system-ui', 'sans-serif'] } } }
     }
   </script>
 
-  <!-- GSAP & ScrollTrigger -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-  <!-- Lucide Icons -->
+  <!-- GSAP + ScrollTrigger + MorphSVG (local copies, v3.13) -->
+  <script src="../vendor/gsap.min.js"></script>
+  <script src="../vendor/ScrollTrigger.min.js"></script>
+  <script src="../vendor/MorphSVGPlugin.min.js"></script>
+
+  <!-- Lucide icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
 
   <style>
-    /* Global Base */
+    @font-face {
+      font-family: 'Anton';
+      src: url('../fonts/Anton-Regular.ttf') format('truetype');
+      font-display: swap;
+    }
+
+    :root {
+      --bg-gif: url('../images/601b796d65b6a0b20c43c9b16f57d0f7-ezgif.com-speed.gif');
+      --bar: 60px;
+    }
+    @media (max-width: 760px) { :root { --bar: 22px; } }
+
+    html, body { margin: 0; padding: 0; }
     body {
-      background-color: #000000;
-      font-family: 'Inter', sans-serif;
-      margin: 0;
-      padding: 0;
+      background: #000;
+      font-family: 'Inter', system-ui, sans-serif;
       color: #18181b;
       overflow-x: hidden;
     }
+    .font-anton { font-family: 'Anton', Impact, sans-serif; letter-spacing: .01em; }
 
-    /* Fixed Full-screen Background Video/GIF Layer with Screen Blend */
+    /* ---------- Background "video" (GIF) layer ---------- */
     [data-page-background] {
+      position: fixed;
+      inset: 0;
       width: 100%;
       height: 100vh;
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      margin-left: auto;
-      margin-right: auto;
-      mix-blend-mode: screen;
+      height: 100lvh;
+      background: var(--bg-gif) center / cover no-repeat #000;
       pointer-events: none;
-      z-index: 10;
-      overflow: hidden;
+      z-index: 0;
     }
 
-    [data-page-background] .bg-media {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      object-position: center center;
-    }
-
-    /* Page Container (90vw Centered Canvas matching image) */
+    /* ---------- Page container (white sheet, 90vw) ---------- */
     [data-page-container] {
-      background-color: #ffffff;
       position: relative;
+      z-index: 1;
       width: 90vw;
       margin: 0 auto;
       min-height: 100vh;
-      overflow-x: hidden;
-      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.7);
-      z-index: 2;
+      background: #fff;
+      overflow-x: clip;
     }
+    @media (max-width: 760px) { [data-page-container] { width: 94vw; } }
 
-    @media screen and (max-width: 760px) {
-      [data-page-container] {
-        width: 94vw;
-      }
-    }
-
-    /* Header matching user uploaded mockup image */
-    header.reference-header {
-      border-top: 10px solid #000000;
-      border-bottom: 2px solid #000000;
-      height: 100px;
+    /* ---------- Header (matches reference) ---------- */
+    .site-header {
+      position: relative;
+      z-index: 5;
+      background: #fff;
+      margin-top: 10px;
+      height: 78px;
       display: flex;
+      align-items: center;
       justify-content: space-between;
-      align-items: center;
       padding: 0 2.5rem;
-      background: #ffffff;
+      border-bottom: 1px solid #e4e4e7;
+    }
+    .site-header::after {            /* thick black bar under header */
+      content: "";
+      position: absolute;
+      left: 0; right: 0; bottom: -9px;
+      height: 8px;
+      background: #000;
+    }
+    .site-header .logo img { height: 72px; width: auto; display: block; }
+
+    .site-header nav { display: flex; align-items: flex-start; gap: 1.1rem; }
+    .nav-dot {
+      display: flex; flex-direction: column; align-items: center;
+      text-decoration: none; color: #000;
+    }
+    .nav-dot .circle {
+      width: 46px; height: 46px; border-radius: 50%;
+      background: #000;
+      display: flex; align-items: center; justify-content: center;
+      color: #fff;
+      box-shadow: 0 2px 6px rgba(0,0,0,.25);
+      transition: transform .25s cubic-bezier(.16,1,.3,1);
+    }
+    .nav-dot .circle svg { width: 18px; height: 18px; opacity: 0; transition: opacity .2s; }
+    .nav-dot:hover .circle { transform: scale(1.08); }
+    .nav-dot:hover .circle svg { opacity: 1; }
+    .nav-dot span {
+      font-family: 'Anton', Impact, sans-serif;
+      font-size: 12px; line-height: 1; margin-top: 6px;
+      white-space: nowrap; letter-spacing: .02em;
+    }
+
+    @media (max-width: 760px) {
+      .site-header { height: 64px; padding: 0 .75rem; margin-top: 6px; }
+      .site-header .logo img { height: 50px; }
+      .site-header nav { gap: .45rem; }
+      .nav-dot .circle { width: 30px; height: 30px; }
+      .nav-dot .circle svg { opacity: 1; width: 13px; height: 13px; }
+      .nav-dot span { font-size: 8.5px; margin-top: 4px; }
+    }
+    @media (max-width: 360px) {
+      .nav-dot span { font-size: 7.5px; }
+      .site-header .logo img { height: 42px; }
+    }
+
+    /* ---------- HERO: R → C → N → WARRI (pinned, centered) ---------- */
+    #intro {
       position: relative;
-      z-index: 50;
-    }
-
-    .reference-header .logo-container {
-      display: flex;
-      align-items: center;
-      height: 100%;
-    }
-
-    .reference-header .logo-container img {
-      height: 64px;
-      max-height: 70px;
-      width: auto;
-      object-fit: contain;
-    }
-
-    .reference-header nav {
-      display: flex;
-      align-items: center;
-      gap: 1.5rem;
-    }
-
-    /* 4 Circular Action Buttons with Labels Below */
-    .nav-action-item {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-decoration: none;
-      cursor: pointer;
-      transition: transform 0.2s;
-    }
-
-    .nav-action-circle {
-      width: 42px;
-      height: 42px;
-      background-color: #000000;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #ffffff;
-      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-    }
-
-    .nav-action-item:hover .nav-action-circle {
-      transform: scale(1.1);
-      background-color: #1e1e24;
-      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.3);
-    }
-
-    .nav-action-label {
-      font-size: 11px;
-      font-weight: 700;
-      color: #000000;
-      margin-top: 5px;
-      white-space: nowrap;
-      letter-spacing: -0.01em;
-      font-family: 'Inter', sans-serif;
-    }
-
-    @media screen and (max-width: 760px) {
-      header.reference-header {
-        padding: 0 1rem;
-        height: 85px;
-      }
-      .reference-header .logo-container img {
-        height: 44px;
-      }
-      .reference-header nav {
-        gap: 0.75rem;
-      }
-      .nav-action-circle {
-        width: 32px;
-        height: 32px;
-      }
-      .nav-action-label {
-        font-size: 9px;
-      }
-    }
-
-    /* Section 1: Hero & Morph Stage with ANTON font */
-    [data-page-section="one"] {
-      width: 100%;
       height: 100vh;
+      height: 100svh;
+      background: #fff;
       display: flex;
-      justify-content: center;
-      align-items: center;
       flex-direction: column;
-      position: relative;
-      background: #ffffff;
-    }
-
-    .border-top {
-      width: 100%;
-      height: 60px;
-      background-color: #000000;
-      transform: scaleX(0);
-      transform-origin: 0% 50%;
-      margin-bottom: auto;
-    }
-
-    .border-bottom {
-      width: 100%;
-      height: 60px;
-      background-color: #000000;
-      transform: scaleX(0);
-      transform-origin: 100% 50%;
-      margin-top: auto;
-    }
-
-    /* Hero Center Stage for Anton Letters */
-    .hero-center-stage {
-      position: relative;
-      width: 100%;
-      height: 65vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      isolation: isolate;             /* screen blend stays inside hero */
       overflow: hidden;
     }
+    #intro .bar-top, #intro .bar-bottom {
+      flex: 0 0 var(--bar);
+      width: 100%;
+      background: #000;
+      transform: scaleX(0);
+    }
+    #intro .bar-top { transform-origin: 0 50%; }
+    #intro .bar-bottom { transform-origin: 100% 50%; }
 
-    .anton-hero-letter {
-      font-family: 'Anton', sans-serif;
-      color: #000000;
-      font-weight: 900;
-      text-transform: uppercase;
-      line-height: 0.85;
-      text-align: center;
-      user-select: none;
-      position: absolute;
-      left: 0;
-      right: 0;
-      margin: 0 auto;
+    .hero-stage {
+      flex: 1 1 auto;
+      min-height: 0;
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
+      padding: 4vh 5vw 2vh;
+      gap: 2vh;
+    }
+    #hero-svg {
       width: 100%;
-      letter-spacing: -0.02em;
+      height: 100%;
+      max-height: 100%;
+      flex: 1 1 auto;
+      min-height: 0;
+      overflow: visible;
+      display: block;
+    }
+    .hero-caption { text-align: center; flex: 0 0 auto; }
+    .hero-caption .word {
+      font-family: 'Anton', Impact, sans-serif;
+      font-size: clamp(18px, 3.2vw, 34px);
+      letter-spacing: .08em;
+      line-height: 1;
+      color: #000;
+    }
+    .hero-caption .hint {
+      font-size: 11px; letter-spacing: .25em; text-transform: uppercase;
+      color: #a1a1aa; margin-top: 8px;
     }
 
-    /* Single letter size */
-    .single-letter {
-      font-size: clamp(12rem, 36vw, 32rem);
+    /* The GIF layer blended with "screen": white stays white, black letters reveal the video */
+    .hero-blend {
+      position: absolute;
+      inset: 0;
+      background: var(--bg-gif) center / cover no-repeat;
+      mix-blend-mode: screen;
+      pointer-events: none;
+      z-index: 3;
     }
 
-    /* Word WARRI size matching mockup image */
-    .word-letter {
-      font-size: clamp(6.5rem, 21vw, 22rem);
-      letter-spacing: -0.01em;
+    @media (max-width: 760px) {
+      .hero-stage { padding: 3vh 6vw 2vh; }
+      .hero-caption .hint { font-size: 9px; letter-spacing: .18em; }
     }
 
-    /* Section 2: 3D Perspective Scroll Banners */
-    .banners-3d-wrapper {
-      background-color: #09090b;
-      padding: 100px 0;
-      color: #fafafa;
-    }
-
+    /* ---------- 3D perspective banners ---------- */
+    .banners-3d-wrapper { background: #09090b; padding: 90px 0 30px; color: #fafafa; }
     .banner-sec {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      width: 90%;
-      max-width: 900px;
-      margin: 0 auto 80px auto;
-      color: #222;
+      display: flex; justify-content: center; align-items: center;
+      width: 90%; max-width: 900px; margin: 0 auto 80px;
       text-transform: uppercase;
-      font-size: 2.6em;
-      font-weight: 700;
-      font-family: 'Montserrat', sans-serif;
     }
-
-    .full-3d { min-height: 50vh; }
-
-    .banner {
-      color: #E8E8E8;
-      display: flex;
-      align-items: stretch;
-      width: 100%;
+    .banner { display: flex; align-items: stretch; width: 100%; }
+    .banner3d-1, .banner3d-2, .banner3d-3, .banner3d-4 {
+      perspective: 700px; -webkit-transform-style: flat; transform-style: preserve-3d;
     }
-
-    /* 3D Banner 1 */
-    .banner3d-1 {
-      width: 100%;
-      perspective: 700px;
-      -webkit-transform-style: flat;
-      transform-style: preserve-3d;
-    }
-
-    .banner3d-1-front {
-      padding: 60px 40px;
-      background: #18181b;
-      border: 1px solid #27272a;
-      transform: translatez(50px);
-      transform-style: preserve-3d;
-      border-radius: 8px;
-    }
-
-    .banner3d-1-front:before {
-      position: absolute;
-      content: "";
-      width: 100%;
-      left: 0;
-      height: 50px;
-      background-color: #3f3f46;
-      top: -50px;
-      transform-origin: center bottom;
-      transform: rotatex(90deg);
-    }
-
-    .banner3d-1-front:after {
-      position: absolute;
-      content: "";
-      width: 100%;
-      left: 0;
-      height: 50px;
-      background-color: #27272a;
-      bottom: -50px;
-      transform-origin: center top;
-      transform: rotatex(-90deg);
-    }
-
-    /* 3D Banner 2 */
-    .banner3d-2 {
-      width: 100%;
-      perspective: 700px;
-      -webkit-transform-style: flat;
-      transform-style: preserve-3d;
-      z-index: 1;
-    }
-
-    .banner3d-2-front {
-      padding: 60px 40px;
-      background: #18181b;
-      border: 1px solid #27272a;
-      transform: translatez(-50px);
-      transform-style: preserve-3d;
-      border-radius: 8px;
-    }
-
-    .banner3d-2-front:before {
-      position: absolute;
-      content: "";
-      width: 100%;
-      left: 0;
-      height: 50px;
-      background-color: #27272a;
-      top: -50px;
-      transform-origin: center bottom;
-      transform: rotatex(-90deg);
-    }
-
-    .banner3d-2-front:after {
-      position: absolute;
-      content: "";
-      width: 100%;
-      left: 0;
-      height: 50px;
-      background-color: #3f3f46;
-      bottom: -50px;
-      transform-origin: center top;
-      transform: rotatex(90deg);
-    }
-
-    /* 3D Banner 3 */
-    .banner3d-3 {
-      width: 55%;
-      perspective: 700px;
-      -webkit-transform-style: flat;
-      transform-style: preserve-3d;
-    }
-
-    .banner3d-3-front {
-      padding: 70px 30px;
-      text-align: center;
-      background: #18181b;
-      border: 1px solid #27272a;
-      transform: translatez(50px);
-      transform-style: preserve-3d;
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      border-radius: 8px 0 0 8px;
-    }
-
-    .banner3d-3-front:before {
-      position: absolute;
-      content: "";
-      width: 100%;
-      left: 0;
-      height: 50px;
-      background-color: #404040;
-      top: -50px;
-      transform-origin: center bottom;
-      transform: rotatex(90deg);
-    }
-
-    .banner3d-3-front:after {
-      position: absolute;
-      content: "";
-      width: 100%;
-      left: 0;
-      height: 50px;
-      background-color: #404040;
-      bottom: -50px;
-      transform-origin: center top;
-      transform: rotatex(-90deg);
-    }
-
-    .banner-img-1 {
-      width: 45%;
-      background: url('wp-content/uploads/2023/04/papa-church-bg-scaled.jpg') no-repeat;
-      background-size: cover;
-      background-position: center;
-      border-radius: 0 8px 8px 0;
-      min-height: 350px;
-      box-shadow: inset 25px 0px 30px 10px rgba(0,0,0,0.6);
+    .banner3d-1, .banner3d-2 { width: 100%; }
+    .banner3d-3 { width: 55%; }
+    .banner3d-4 { width: 60%; }
+    .front {
       position: relative;
+      background: #18181b; border: 1px solid #27272a;
+      transform-style: preserve-3d; padding: 56px 36px;
+      height: 100%; display: flex; flex-direction: column; justify-content: center;
     }
-
-    /* 3D Banner 4 */
-    .banner3d-4 {
-      width: 60%;
-      perspective: 700px;
-      -webkit-transform-style: flat;
-      transform-style: preserve-3d;
-      z-index: 1;
+    .front.out { transform: translateZ(50px); }
+    .front.in  { transform: translateZ(-50px); }
+    .front::before, .front::after {
+      position: absolute; content: ""; left: 0; width: 100%; height: 50px; background: #3f3f46;
     }
-
-    .banner3d-4-front {
-      padding: 60px 30px;
-      background: #18181b;
-      border: 1px solid #27272a;
-      transform: translatez(-50px);
-      transform-style: preserve-3d;
-      border-radius: 8px 0 0 8px;
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-    }
-
-    .banner3d-4-front:before {
-      position: absolute;
-      content: "";
-      width: 100%;
-      left: 0;
-      height: 50px;
-      background-color: #3f3f46;
-      top: -50px;
-      transform-origin: center bottom;
-      transform: rotatex(-90deg);
-    }
-
-    .banner3d-4-front:after {
-      position: absolute;
-      content: "";
-      width: 100%;
-      left: 0;
-      height: 50px;
-      background-color: #3f3f46;
-      bottom: -50px;
-      transform-origin: center top;
-      transform: rotatex(90deg);
-    }
-
-    .banner-img-2 {
-      width: 40%;
-      background: url('wp-content/uploads/2016/05/pkess-300x300.jpg') no-repeat;
-      background-size: cover;
-      background-position: center center;
-      border-radius: 0 8px 8px 0;
-      border: 10px solid #27272a;
-      box-sizing: border-box;
-      min-height: 350px;
-      position: relative;
-    }
-
+    .front.out::before { top: -50px; transform-origin: center bottom; transform: rotateX(90deg); }
+    .front.out::after  { bottom: -50px; transform-origin: center top; transform: rotateX(-90deg); }
+    .front.in::before  { top: -50px; transform-origin: center bottom; transform: rotateX(-90deg); }
+    .front.in::after   { bottom: -50px; transform-origin: center top; transform: rotateX(90deg); }
+    .banner-img { position: relative; min-height: 340px; background-size: cover; background-position: center; }
+    .banner-img.one { width: 45%; background-image: url('wp-content/uploads/2023/04/papa-church-bg-scaled.jpg'); box-shadow: inset 25px 0 30px 10px rgba(0,0,0,.6); }
+    .banner-img.two { width: 40%; background-image: url('wp-content/uploads/2016/05/pkess-300x300.jpg'); border: 10px solid #27272a; }
     @media (max-width: 991px) {
-      .banner-sec {
-        font-size: 1.8em;
-      }
-      .banner {
-        flex-direction: column;
-      }
-      .banner3d-3, .banner3d-4, .banner-img-1, .banner-img-2 {
-        width: 100%;
-        border-radius: 8px;
-      }
-      .banner-img-1, .banner-img-2 {
-        height: 280px;
-        min-height: 280px;
-        margin-top: 20px;
-      }
+      .banner { flex-direction: column; }
+      .banner3d-3, .banner3d-4, .banner-img.one, .banner-img.two { width: 100%; }
+      .banner-img { min-height: 280px; margin-top: 20px; }
+      .front { padding: 40px 22px; }
     }
 
-    /* shadcn Card styling */
-    .shadcn-card {
-      background: #ffffff;
-      border: 1px solid #e4e4e7;
-      border-radius: 1rem;
-      transition: all 0.25s ease-in-out;
-    }
+    .card { background: #fff; border: 1px solid #e4e4e7; border-radius: 1rem; transition: all .25s; }
+    .card:hover { border-color: #a1a1aa; box-shadow: 0 10px 30px -10px rgba(0,0,0,.1); transform: translateY(-2px); }
 
-    .shadcn-card:hover {
-      border-color: #a1a1aa;
-      box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.08);
-      transform: translateY(-2px);
-    }
-
-    /* Toast notification */
-    #copy-toast {
-      position: fixed;
-      bottom: 2rem;
-      right: 2rem;
-      z-index: 9999;
-      transform: translateY(150%);
-      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    #copy-toast.show {
-      transform: translateY(0);
-    }
+    #copy-toast { position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 99; transform: translateY(160%); transition: transform .3s cubic-bezier(.16,1,.3,1); }
+    #copy-toast.show { transform: translateY(0); }
   </style>
 </head>
 <body>
 
-  <!-- BACKGROUND VIDEO/GIF: Specified by user with mix-blend-mode: screen -->
-  <div data-page-background>
-    <img src="images/601b796d65b6a0b20c43c9b16f57d0f7-ezgif.com-speed.gif" alt="Ambient Motion Background" class="bg-media">
-  </div>
+  <!-- Background GIF layer (shows around the white sheet) -->
+  <div data-page-background aria-hidden="true"></div>
 
-  <!-- PAGE CONTAINER (90vw Centered Canvas matching uploaded reference) -->
-  <div data-page-container id="page-wrapper">
+  <div data-page-container>
 
-    <!-- HEADER: Matching uploaded mockup image -->
-    <header class="reference-header">
-      <!-- Left: Uploaded Official Logo PNG -->
-      <a href="#intro" class="logo-container" title="Remnant Christian Network Warri">
-        <img src="wp-content/uploads/rcn-warri-logo.png" alt="Remnant Christian Network Warri">
+    <!-- ================= HEADER ================= -->
+    <header class="site-header">
+      <a href="#intro" class="logo" title="Remnant Christian Network Warri">
+        <img src="../images/rcn-logo.png" alt="Remnant Christian Network Warri">
       </a>
-
-      <!-- Right: 4 Circular Buttons with Labels Below -->
       <nav>
-        <!-- Button 1: Message -->
-        <a href="#sermons" class="nav-action-item" title="Sermons & Audio Vault">
-          <div class="nav-action-circle">
-            <i data-lucide="headphones" class="w-4 h-4"></i>
-          </div>
-          <span class="nav-action-label">Message</span>
-        </a>
-
-        <!-- Button 2: Join Us -->
-        <a href="#services" class="nav-action-item" title="Weekly Services & Location">
-          <div class="nav-action-circle">
-            <i data-lucide="users" class="w-4 h-4"></i>
-          </div>
-          <span class="nav-action-label">Join Us</span>
-        </a>
-
-        <!-- Button 3: Winepress -->
-        <a href="#winepress" class="nav-action-item" title="Winepress Prayer Watches & Altar">
-          <div class="nav-action-circle">
-            <i data-lucide="flame" class="w-4 h-4 text-amber-400"></i>
-          </div>
-          <span class="nav-action-label">Winepress</span>
-        </a>
-
-        <!-- Button 4: Partner With Us -->
-        <a href="#giving" class="nav-action-item" title="Sanctuary Project & Giving">
-          <div class="nav-action-circle">
-            <i data-lucide="heart" class="w-4 h-4"></i>
-          </div>
-          <span class="nav-action-label">Partner With Us</span>
-        </a>
+        <a href="#sermons" class="nav-dot"><div class="circle"><i data-lucide="headphones"></i></div><span>Message</span></a>
+        <a href="#services" class="nav-dot"><div class="circle"><i data-lucide="users"></i></div><span>Join Us</span></a>
+        <a href="#winepress" class="nav-dot"><div class="circle"><i data-lucide="flame"></i></div><span>Winepress</span></a>
+        <a href="#giving" class="nav-dot"><div class="circle"><i data-lucide="heart"></i></div><span>Partner With Us</span></a>
       </nav>
     </header>
 
-    <!-- ================================================================= -->
-    <!-- (1) HERO & SCROLL ANIMATION: R -> C -> N -> WARRI (ANTON FONT)     -->
-    <!-- (In the middle of the exact same position, layer with screen blend)-->
-    <!-- ================================================================= -->
-    <section id="intro" data-page-section="one">
-      <div class="border-top"></div>
-      
-      <div class="hero-center-stage">
-        <!-- Letter R in Anton font -->
-        <div id="letter-r" class="anton-hero-letter single-letter">R</div>
-        <!-- Letter C in Anton font -->
-        <div id="letter-c" class="anton-hero-letter single-letter opacity-0 pointer-events-none">C</div>
-        <!-- Letter N in Anton font -->
-        <div id="letter-n" class="anton-hero-letter single-letter opacity-0 pointer-events-none">N</div>
-        <!-- Word WARRI in Anton font matching uploaded image -->
-        <div id="letter-warri" class="anton-hero-letter word-letter opacity-0 pointer-events-none">WARRI</div>
-      </div>
+    <!-- ================= HERO: R → C → N → WARRI ================= -->
+    <section id="intro">
+      <div class="bar-top"></div>
 
-      <!-- Live Dynamic Status Indicator -->
-      <div class="text-center pb-2 z-20">
-        <span id="letter-indicator" class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-mono font-bold tracking-widest uppercase bg-zinc-100 text-zinc-900 border border-zinc-300 shadow-sm transition-all duration-300">
-          <span class="w-2 h-2 rounded-full bg-blue-600 animate-pulse"></span>
-          R &bull; REMNANT
-        </span>
-        <div class="text-[11px] uppercase tracking-widest text-zinc-400 font-mono mt-1 font-semibold">
-          Scroll down &bull; R &rarr; C &rarr; N &rarr; WARRI
+      <div class="hero-stage">
+        <svg id="hero-svg" viewBox="58 -35 900 1830" preserveAspectRatio="xMidYMid meet" aria-label="RCN Warri">
+          <path id="letters" fill="#000" d="M78 1760V0H618Q753 0 822.0 61.5Q891 123 914.5 233.5Q938 344 938 493Q938 637 901.5 723.0Q865 809 764 842Q847 859 880.5 924.5Q914 990 914 1094V1760H567V1071Q567 994 535.5 975.5Q504 957 434 957V1760ZM436 652H521Q594 652 594 493Q594 390 578.0 358.0Q562 326 518 326H436Z"/>
+        </svg>
+
+        <div class="hero-caption">
+          <div class="word" id="hero-word">REMNANT</div>
+          <div class="hint">Scroll &darr; R &bull; C &bull; N &bull; Warri</div>
         </div>
       </div>
 
-      <div class="border-bottom"></div>
+      <div class="bar-bottom"></div>
+
+      <!-- GIF blended through the letters -->
+      <div class="hero-blend" aria-hidden="true"></div>
     </section>
 
-    <!-- ================================================================= -->
-    <!-- (2) 3D PERSPECTIVE SCROLL BANNERS (gsap & scrolltrigger)          -->
-    <!-- ================================================================= -->
+    <!-- ================= 3D PERSPECTIVE BANNERS ================= -->
     <div class="banners-3d-wrapper">
       <div class="max-w-4xl mx-auto px-6 mb-16 text-center">
-        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold tracking-wider uppercase bg-blue-950 text-blue-400 border border-blue-800/60 mb-4">
-          <i data-lucide="layers" class="w-3.5 h-3.5"></i>
-          3D Perspective Architecture
-        </div>
-        <h2 class="text-3xl md:text-5xl font-black tracking-tight text-white uppercase font-montserrat">
-          Dimensions of the Mandate
-        </h2>
-        <p class="text-zinc-400 mt-3 text-sm md:text-base max-w-xl mx-auto">
-          As you scroll, observe the spatial shift — accurate apostolic patterns unfolding in depth and authority.
-        </p>
+        <p class="text-xs tracking-[.3em] uppercase text-zinc-400 mb-3">Dimensions of the Mandate</p>
+        <h2 class="font-anton text-4xl md:text-6xl uppercase text-white">Accurate Apostolic Patterns</h2>
       </div>
 
-      <!-- Banner 1 -->
-      <section class="banner-sec full-3d">
+      <section class="banner-sec">
         <div class="banner banner3d-1">
-          <div class="banner3d-1-front text-center">
-            <span class="block text-xs md:text-sm tracking-widest text-blue-400 font-mono mb-2 uppercase">Core Mandate</span>
-            <h3 class="text-2xl md:text-4xl lg:text-5xl font-black text-white leading-tight">
-              Rebirth of Apostolic Christianity
-            </h3>
-            <p class="text-zinc-400 text-xs md:text-sm font-sans normal-case tracking-normal mt-4 max-w-2xl mx-auto">
-              Returning believers to authentic supernatural power, earnest intercession, and unadulterated biblical truth across all generations.
-            </p>
+          <div class="front out text-center">
+            <span class="block text-xs tracking-widest text-blue-400 mb-2">Core Mandate</span>
+            <h3 class="font-anton text-3xl md:text-5xl text-white leading-tight">Rebirth of Apostolic Christianity</h3>
+            <p class="text-zinc-400 text-sm normal-case mt-4 max-w-2xl mx-auto">Returning believers to authentic supernatural power, earnest intercession, and unadulterated biblical truth across all generations.</p>
           </div>
         </div>
       </section>
 
-      <!-- Banner 2 -->
-      <section class="banner-sec full-3d">
+      <section class="banner-sec">
         <div class="banner banner3d-2">
-          <div class="banner3d-2-front text-center">
-            <span class="block text-xs md:text-sm tracking-widest text-emerald-400 font-mono mb-2 uppercase">The Four Cornerstones</span>
-            <h3 class="text-2xl md:text-4xl lg:text-5xl font-black text-white leading-tight">
-              Raise &bull; Restore &bull; Revive &bull; Renew
-            </h3>
-            <p class="text-zinc-400 text-xs md:text-sm font-sans normal-case tracking-normal mt-4 max-w-2xl mx-auto">
-              Equipping believers as men and women of spiritual stature, governmental authority, and consecrated hearts.
-            </p>
+          <div class="front in text-center">
+            <span class="block text-xs tracking-widest text-emerald-400 mb-2">The Four Cornerstones</span>
+            <h3 class="font-anton text-3xl md:text-5xl text-white leading-tight">Raise &bull; Restore &bull; Revive &bull; Renew</h3>
+            <p class="text-zinc-400 text-sm normal-case mt-4 max-w-2xl mx-auto">Equipping believers as men and women of spiritual stature, governmental authority, and consecrated hearts.</p>
           </div>
         </div>
       </section>
 
-      <!-- Banner 3 -->
-      <section class="banner-sec full-3d">
+      <section class="banner-sec">
         <div class="banner">
           <div class="banner3d-3">
-            <div class="banner3d-3-front">
-              <span class="block text-xs md:text-sm tracking-widest text-amber-400 font-mono mb-2 uppercase">Apostolic Pattern</span>
-              <h3 class="text-xl md:text-3xl font-black text-white leading-tight">
-                Raising Sons of Order
-              </h3>
-              <p class="text-zinc-400 text-xs md:text-sm font-sans normal-case tracking-normal mt-3">
-                Intercessors, Prophets, Evangelists and Teachers established in holiness and love.
-              </p>
+            <div class="front out text-center">
+              <span class="block text-xs tracking-widest text-amber-400 mb-2">Apostolic Pattern</span>
+              <h3 class="font-anton text-2xl md:text-4xl text-white leading-tight">Raising Sons of Order</h3>
+              <p class="text-zinc-400 text-sm normal-case mt-3">Intercessors, Prophets, Evangelists and Teachers established in holiness and love.</p>
             </div>
           </div>
-          <div class="banner-img-1 flex items-end p-6">
-            <div class="bg-black/70 backdrop-blur-md p-4 rounded-xl border border-white/10 text-white w-full">
-              <span class="text-[10px] uppercase font-mono text-amber-400 tracking-wider">The Set Man</span>
-              <h4 class="font-bold text-base md:text-lg">Apostle Arome Osayi</h4>
-              <p class="text-xs text-zinc-300">Remnant Christian Network Global</p>
+          <div class="banner-img one flex items-end p-5">
+            <div class="bg-black/70 backdrop-blur p-4 rounded-xl border border-white/10 text-white w-full normal-case">
+              <span class="text-[10px] uppercase tracking-wider text-amber-400">The Set Man</span>
+              <h4 class="font-anton text-lg">Apostle Arome Osayi</h4>
+              <p class="text-xs text-zinc-300">Remnant Christian Network</p>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- Banner 4 -->
-      <section class="banner-sec full-3d">
+      <section class="banner-sec">
         <div class="banner">
           <div class="banner3d-4">
-            <div class="banner3d-4-front">
-              <span class="block text-xs md:text-sm tracking-widest text-purple-400 font-mono mb-2 uppercase">Warri Sanctuary</span>
-              <h3 class="text-xl md:text-3xl font-black text-white leading-tight">
-                Perpetual Altar of Fire
-              </h3>
-              <p class="text-zinc-400 text-xs md:text-sm font-sans normal-case tracking-normal mt-3">
-                Continuous prayer watches across Warri and the Niger Delta, shifting territorial atmosphere.
-              </p>
+            <div class="front in">
+              <span class="block text-xs tracking-widest text-purple-400 mb-2">Warri Sanctuary</span>
+              <h3 class="font-anton text-2xl md:text-4xl text-white leading-tight">Perpetual Altar of Fire</h3>
+              <p class="text-zinc-400 text-sm normal-case mt-3">Continuous prayer watches across Warri and the Niger Delta, shifting territorial atmosphere.</p>
             </div>
           </div>
-          <div class="banner-img-2 flex items-end p-6">
-            <div class="bg-black/70 backdrop-blur-md p-4 rounded-xl border border-white/10 text-white w-full">
-              <span class="text-[10px] uppercase font-mono text-purple-400 tracking-wider">Point Man &bull; RCN Warri</span>
-              <h4 class="font-bold text-base md:text-lg">Evang. Kesiena Esiri</h4>
+          <div class="banner-img two flex items-end p-5">
+            <div class="bg-black/70 backdrop-blur p-4 rounded-xl border border-white/10 text-white w-full normal-case">
+              <span class="text-[10px] uppercase tracking-wider text-purple-400">Point Man &bull; RCN Warri</span>
+              <h4 class="font-anton text-lg">Evang. Kesiena Esiri</h4>
               <p class="text-xs text-zinc-300">Leading the Warri Mission</p>
             </div>
           </div>
@@ -724,656 +351,201 @@
       </section>
     </div>
 
-    <!-- ================================================================= -->
-    <!-- WINEPRESS & APOSTOLIC ALTAR SECTION                               -->
-    <!-- ================================================================= -->
-    <section id="winepress" class="py-20 px-6 md:px-12 bg-zinc-950 text-white border-t border-zinc-800">
-      <div class="max-w-6xl mx-auto">
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-          
-          <div class="lg:col-span-7 space-y-6">
-            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold tracking-wider uppercase bg-amber-500/20 text-amber-400 border border-amber-500/30">
-              <i data-lucide="flame" class="w-3.5 h-3.5"></i>
-              WINEPRESS PRAYER ALTAR
-            </div>
-            
-            <h2 class="text-4xl md:text-6xl font-black tracking-tight text-white font-montserrat leading-tight">
-              The Place of <span class="text-amber-400">Consecration</span> and Fire.
-            </h2>
-            
-            <p class="text-zinc-300 text-base leading-relaxed">
-              Winepress is our consecrated furnace of persistent prayer, intercessory groaning, and spiritual labor. Here, burdens are birthed, territorial strongholds are dislodged, and the presence of God is hosted perpetually.
-            </p>
+    <!-- ================= WELCOME ================= -->
+    <section id="about" class="py-20 px-6 md:px-12 bg-white">
+      <div class="max-w-5xl mx-auto text-center">
+        <p class="text-xs tracking-[.3em] uppercase text-zinc-400 mb-3">A Place For You</p>
+        <h2 class="font-anton text-4xl md:text-6xl uppercase">Welcome to RCN Warri</h2>
+        <p class="text-zinc-600 mt-5 text-base md:text-lg leading-relaxed max-w-3xl mx-auto">Raising Sons of Order; Men and Women &ndash; Intercessors, Prophets, Evangelists and Teachers. We believe that in the years to come, people from all nations of the world will come to RCN to experience the true God as well as get in tune with accurate apostolic patterns that they can replicate in their different nations.</p>
+        <p class="font-anton text-2xl md:text-3xl mt-8">&ldquo;Striving towards the rebirth of Apostolic Christianity&rdquo;</p>
+        <p class="text-sm text-zinc-500 mt-2">Apostle Arome Osayi &mdash; The Set Man, Remnant Christian Network</p>
+      </div>
+    </section>
 
-            <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 pt-4">
-              <div class="p-4 rounded-xl bg-zinc-900 border border-zinc-800">
-                <span class="block text-2xl font-black text-amber-400 font-mono">12 AM</span>
-                <span class="text-xs text-zinc-400">Midnight Watch</span>
-              </div>
-              <div class="p-4 rounded-xl bg-zinc-900 border border-zinc-800">
-                <span class="block text-2xl font-black text-amber-400 font-mono">06 AM</span>
-                <span class="text-xs text-zinc-400">Morning Incense</span>
-              </div>
-              <div class="p-4 rounded-xl bg-zinc-900 border border-zinc-800">
-                <span class="block text-2xl font-black text-amber-400 font-mono">06 PM</span>
-                <span class="text-xs text-zinc-400">Evening Oblation</span>
-              </div>
+    <!-- ================= WINEPRESS ================= -->
+    <section id="winepress" class="py-20 px-6 md:px-12 bg-zinc-950 text-white">
+      <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+        <div class="lg:col-span-7 space-y-5">
+          <p class="text-xs tracking-[.3em] uppercase text-amber-400">Winepress Prayer Altar</p>
+          <h2 class="font-anton text-4xl md:text-6xl uppercase leading-none">The Place of <span class="text-amber-400">Consecration</span> and Fire</h2>
+          <p class="text-zinc-300 leading-relaxed">Winepress is our consecrated furnace of persistent prayer, intercession and spiritual labour. Here burdens are birthed, strongholds are dislodged, and the presence of God is hosted perpetually.</p>
+          <div class="grid grid-cols-3 gap-3 pt-2">
+            <div class="p-4 rounded-xl bg-zinc-900 border border-zinc-800"><span class="block font-anton text-2xl text-amber-400">12 AM</span><span class="text-xs text-zinc-400">Midnight Watch</span></div>
+            <div class="p-4 rounded-xl bg-zinc-900 border border-zinc-800"><span class="block font-anton text-2xl text-amber-400">06 AM</span><span class="text-xs text-zinc-400">Morning Incense</span></div>
+            <div class="p-4 rounded-xl bg-zinc-900 border border-zinc-800"><span class="block font-anton text-2xl text-amber-400">06 PM</span><span class="text-xs text-zinc-400">Evening Oblation</span></div>
+          </div>
+        </div>
+        <div class="lg:col-span-5">
+          <div class="rounded-2xl overflow-hidden border border-zinc-800 relative">
+            <img src="../images/worship-sanctuary.jpg" alt="RCN worship atmosphere" class="w-full h-80 object-cover">
+            <div class="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent flex items-end p-6">
+              <div><p class="text-xs uppercase tracking-widest text-amber-400">Warri Altar</p><h4 class="font-anton text-2xl">Join the Fire Watch</h4></div>
             </div>
           </div>
-
-          <div class="lg:col-span-5">
-            <div class="rounded-2xl overflow-hidden border border-zinc-800 shadow-2xl relative">
-              <img src="wp-content/uploads/rcn-worship.jpg" alt="RCN Worship & Prayer Atmosphere" class="w-full h-80 object-cover object-center">
-              <div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent flex items-end p-6">
-                <div>
-                  <span class="text-xs font-mono text-amber-400 uppercase tracking-widest font-bold">Warri Altar</span>
-                  <h4 class="text-xl font-bold text-white mt-1">Join the 24/7 Fire Watch</h4>
-                  <p class="text-xs text-zinc-300 mt-1">Consecrated men and women keeping the lamps burning.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
         </div>
       </div>
     </section>
 
-    <!-- ================================================================= -->
-    <!-- SHADCN BENTO GRID: THE FOUR PILLARS                               -->
-    <!-- ================================================================= -->
-    <section id="pillars" class="py-24 px-6 md:px-12 bg-white">
+    <!-- ================= PILLARS ================= -->
+    <section id="pillars" class="py-20 px-6 md:px-12 bg-white">
       <div class="max-w-6xl mx-auto">
-        <div class="text-center max-w-2xl mx-auto mb-16">
-          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold tracking-wider uppercase bg-blue-50 text-blue-600 border border-blue-200 mb-3">
-            <i data-lucide="shield-check" class="w-3.5 h-3.5"></i>
-            Apostolic Foundations
-          </div>
-          <h2 class="text-3xl md:text-5xl font-black tracking-tight text-zinc-950 font-montserrat">
-            The 4 Pillars of RCN
-          </h2>
-          <p class="text-zinc-500 mt-3 text-sm md:text-base">
-            Structured along divine lines to ensure the full maturation of every disciple into spiritual dominion.
-          </p>
+        <div class="text-center mb-12">
+          <p class="text-xs tracking-[.3em] uppercase text-zinc-400 mb-3">Apostolic Foundations</p>
+          <h2 class="font-anton text-4xl md:text-6xl uppercase">Raise. Restore. Revive. Renew.</h2>
         </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          
-          <!-- Pillar 1 -->
-          <div class="shadcn-card p-6 flex flex-col justify-between">
-            <div>
-              <div class="w-12 h-12 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-600 mb-5">
-                <i data-lucide="trending-up" class="w-6 h-6"></i>
-              </div>
-              <span class="text-xs font-mono font-semibold text-blue-600 uppercase tracking-widest">Pillar 01</span>
-              <h3 class="text-xl font-bold text-zinc-900 mt-1 mb-3">RAISE</h3>
-              <p class="text-zinc-600 text-sm leading-relaxed">
-                Raising spiritual giants and disciples of holy discipline capable of contending with dark spiritual powers in heavenly places.
-              </p>
-            </div>
-            <div class="mt-6 pt-4 border-t border-zinc-100 flex items-center text-xs font-semibold text-zinc-800">
-              Discipleship Track &bull; Order
-            </div>
-          </div>
-
-          <!-- Pillar 2 -->
-          <div class="shadcn-card p-6 flex flex-col justify-between">
-            <div>
-              <div class="w-12 h-12 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center justify-center text-emerald-600 mb-5">
-                <i data-lucide="rotate-ccw" class="w-6 h-6"></i>
-              </div>
-              <span class="text-xs font-mono font-semibold text-emerald-600 uppercase tracking-widest">Pillar 02</span>
-              <h3 class="text-xl font-bold text-zinc-900 mt-1 mb-3">RESTORE</h3>
-              <p class="text-zinc-600 text-sm leading-relaxed">
-                Recovering ancient landmarks, the spirit of genuine repentance, and accurate biblical blueprints lost to compromise.
-              </p>
-            </div>
-            <div class="mt-6 pt-4 border-t border-zinc-100 flex items-center text-xs font-semibold text-zinc-800">
-              Ancient Paths &bull; Truth
-            </div>
-          </div>
-
-          <!-- Pillar 3 -->
-          <div class="shadcn-card p-6 flex flex-col justify-between">
-            <div>
-              <div class="w-12 h-12 rounded-xl bg-amber-50 border border-amber-100 flex items-center justify-center text-amber-600 mb-5">
-                <i data-lucide="flame" class="w-6 h-6"></i>
-              </div>
-              <span class="text-xs font-mono font-semibold text-amber-600 uppercase tracking-widest">Pillar 03</span>
-              <h3 class="text-xl font-bold text-zinc-900 mt-1 mb-3">REVIVE</h3>
-              <p class="text-zinc-600 text-sm leading-relaxed">
-                Igniting perpetual holy fire on personal and congregational prayer altars, breaking spiritual apathy across cities.
-              </p>
-            </div>
-            <div class="mt-6 pt-4 border-t border-zinc-100 flex items-center text-xs font-semibold text-zinc-800">
-              Prayer Altar &bull; Awakening
-            </div>
-          </div>
-
-          <!-- Pillar 4 -->
-          <div class="shadcn-card p-6 flex flex-col justify-between">
-            <div>
-              <div class="w-12 h-12 rounded-xl bg-purple-50 border border-purple-100 flex items-center justify-center text-purple-600 mb-5">
-                <i data-lucide="sparkles" class="w-6 h-6"></i>
-              </div>
-              <span class="text-xs font-mono font-semibold text-purple-600 uppercase tracking-widest">Pillar 04</span>
-              <h3 class="text-xl font-bold text-zinc-900 mt-1 mb-3">RENEW</h3>
-              <p class="text-zinc-600 text-sm leading-relaxed">
-                Transforming the mind through sound doctrine, pure apostolic revelation, and supernatural fellowship with the Holy Ghost.
-              </p>
-            </div>
-            <div class="mt-6 pt-4 border-t border-zinc-100 flex items-center text-xs font-semibold text-zinc-800">
-              Mind Renewal &bull; Glory
-            </div>
-          </div>
-
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          <div class="card p-6"><i data-lucide="trending-up" class="w-7 h-7 text-blue-600 mb-4"></i><h3 class="font-anton text-2xl">RAISE</h3><p class="text-zinc-600 text-sm mt-2">Raising spiritual giants and disciples of holy discipline.</p></div>
+          <div class="card p-6"><i data-lucide="rotate-ccw" class="w-7 h-7 text-emerald-600 mb-4"></i><h3 class="font-anton text-2xl">RESTORE</h3><p class="text-zinc-600 text-sm mt-2">Recovering ancient landmarks and accurate biblical blueprints.</p></div>
+          <div class="card p-6"><i data-lucide="flame" class="w-7 h-7 text-amber-600 mb-4"></i><h3 class="font-anton text-2xl">REVIVE</h3><p class="text-zinc-600 text-sm mt-2">Igniting perpetual fire on personal and congregational altars.</p></div>
+          <div class="card p-6"><i data-lucide="sparkles" class="w-7 h-7 text-purple-600 mb-4"></i><h3 class="font-anton text-2xl">RENEW</h3><p class="text-zinc-600 text-sm mt-2">Transforming minds through sound doctrine and the Holy Ghost.</p></div>
         </div>
       </div>
     </section>
 
-    <!-- ================================================================= -->
-    <!-- SHADCN WEEKLY SERVICES TIMELINE & SCHEDULE (JOIN US)              -->
-    <!-- ================================================================= -->
-    <section id="services" class="py-20 px-6 md:px-12 bg-zinc-900 text-white rounded-2xl mx-4 my-8">
+    <!-- ================= SERVICES (JOIN US) ================= -->
+    <section id="services" class="py-20 px-6 md:px-12 bg-zinc-900 text-white">
       <div class="max-w-6xl mx-auto">
-        <div class="flex flex-col md:flex-row md:items-end justify-between mb-12">
-          <div>
-            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold tracking-wider uppercase bg-zinc-800 text-blue-400 border border-zinc-700 mb-3">
-              <i data-lucide="calendar" class="w-3.5 h-3.5"></i>
-              Worship With Us
-            </div>
-            <h2 class="text-3xl md:text-5xl font-black tracking-tight text-white font-montserrat">
-              Weekly Service Schedule
-            </h2>
-          </div>
-          <p class="text-zinc-400 text-sm max-w-sm mt-3 md:mt-0">
-            Join our physical services in Warri or connect via the global live stream broadcast.
-          </p>
+        <p class="text-xs tracking-[.3em] uppercase text-blue-400 mb-3">Join Us</p>
+        <h2 class="font-anton text-4xl md:text-6xl uppercase mb-10">Weekly Services</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+          <div class="bg-zinc-800/80 border border-zinc-700 rounded-2xl p-6"><p class="text-xs text-blue-400 uppercase font-semibold">Sunday &bull; 8:00 AM</p><h3 class="font-anton text-2xl mt-2">Celebration &amp; Impartation</h3><p class="text-zinc-300 text-sm mt-2">Apostolic worship, revelation of God's Word and ministry by the Spirit.</p></div>
+          <div class="bg-zinc-800/80 border border-zinc-700 rounded-2xl p-6"><p class="text-xs text-emerald-400 uppercase font-semibold">Tuesday &bull; 5:00 PM</p><h3 class="font-anton text-2xl mt-2">Bible Study &amp; Doctrine</h3><p class="text-zinc-300 text-sm mt-2">Precept-upon-precept teaching rooting your walk in truth.</p></div>
+          <div class="bg-zinc-800/80 border border-zinc-700 rounded-2xl p-6"><p class="text-xs text-purple-400 uppercase font-semibold">Friday &bull; 5:30 PM</p><h3 class="font-anton text-2xl mt-2">Miracle &amp; Prophetic Night</h3><p class="text-zinc-300 text-sm mt-2">Prayer watches, prophetic declarations, healing and deliverance.</p></div>
         </div>
+        <a href="live-service/index.html" class="inline-flex items-center gap-2 mt-8 bg-red-600 hover:bg-red-500 text-white text-sm font-semibold px-5 py-3 rounded-lg"><i data-lucide="radio" class="w-4 h-4"></i> Watch Our Live Service</a>
+      </div>
+    </section>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-          
-          <div class="bg-zinc-800/80 border border-zinc-700/80 rounded-2xl p-6 relative overflow-hidden group hover:border-blue-500 transition-all">
-            <div class="flex items-center justify-between mb-4">
-              <span class="px-3 py-1 rounded-full text-xs font-bold uppercase bg-blue-500/20 text-blue-400 border border-blue-500/30">Sunday</span>
-              <span class="text-xs text-zinc-400 font-mono">08:00 AM &bull; 10:30 AM</span>
-            </div>
-            <h3 class="text-2xl font-bold text-white mb-2">Celebration & Impartation</h3>
-            <p class="text-zinc-300 text-sm mb-6 leading-relaxed">
-              Deep apostolic worship, practical revelation of God's Word, and physical ministering by the Spirit.
-            </p>
-            <div class="flex items-center text-xs text-blue-400 font-semibold gap-1">
-              <i data-lucide="map-pin" class="w-4 h-4"></i> RCN Warri Main Sanctuary
-            </div>
-          </div>
-
-          <div class="bg-zinc-800/80 border border-zinc-700/80 rounded-2xl p-6 relative overflow-hidden group hover:border-emerald-500 transition-all">
-            <div class="flex items-center justify-between mb-4">
-              <span class="px-3 py-1 rounded-full text-xs font-bold uppercase bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">Tuesday</span>
-              <span class="text-xs text-zinc-400 font-mono">05:00 PM</span>
-            </div>
-            <h3 class="text-2xl font-bold text-white mb-2">Bible Study & Doctrine</h3>
-            <p class="text-zinc-300 text-sm mb-6 leading-relaxed">
-              In-depth precept-upon-precept apostolic teachings designed to root your walk firmly in biblical truth.
-            </p>
-            <div class="flex items-center text-xs text-emerald-400 font-semibold gap-1">
-              <i data-lucide="book-open" class="w-4 h-4"></i> Scripture & Revelation
-            </div>
-          </div>
-
-          <div class="bg-zinc-800/80 border border-zinc-700/80 rounded-2xl p-6 relative overflow-hidden group hover:border-purple-500 transition-all">
-            <div class="flex items-center justify-between mb-4">
-              <span class="px-3 py-1 rounded-full text-xs font-bold uppercase bg-purple-500/20 text-purple-400 border border-purple-500/30">Friday</span>
-              <span class="text-xs text-zinc-400 font-mono">05:30 PM</span>
-            </div>
-            <h3 class="text-2xl font-bold text-white mb-2">Miracle & Prophetic Night</h3>
-            <p class="text-zinc-300 text-sm mb-6 leading-relaxed">
-              High-intensity prayer watches, prophetic declarations, bodily healing, and total deliverance from yokes.
-            </p>
-            <div class="flex items-center text-xs text-purple-400 font-semibold gap-1">
-              <i data-lucide="zap" class="w-4 h-4"></i> Signs & Supernatural Wonders
-            </div>
-          </div>
-
+    <!-- ================= MESSAGES ================= -->
+    <section id="sermons" class="py-20 px-6 md:px-12 bg-white">
+      <div class="max-w-6xl mx-auto">
+        <p class="text-xs tracking-[.3em] uppercase text-zinc-400 mb-3">Message</p>
+        <h2 class="font-anton text-4xl md:text-6xl uppercase mb-10">Some of Our Messages</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+          <a href="https://www.youtube.com/@RCNWarri" target="_blank" class="card p-6 block"><p class="text-xs text-zinc-400">Apostle Arome Osayi</p><h3 class="font-anton text-xl mt-1">The Apostolic Landmark: Ancient Paths</h3><p class="text-sm text-red-600 mt-4 flex items-center gap-1"><i data-lucide="youtube" class="w-4 h-4"></i> Watch on YouTube</p></a>
+          <a href="https://www.youtube.com/@RCNWarri" target="_blank" class="card p-6 block"><p class="text-xs text-zinc-400">Evang. Kesiena Esiri</p><h3 class="font-anton text-xl mt-1">Building An Unshakable Prayer Altar</h3><p class="text-sm text-red-600 mt-4 flex items-center gap-1"><i data-lucide="youtube" class="w-4 h-4"></i> Watch on YouTube</p></a>
+          <a href="messages/index.html" class="card p-6 block"><p class="text-xs text-zinc-400">Sermon Library</p><h3 class="font-anton text-xl mt-1">Browse All Messages</h3><p class="text-sm text-blue-600 mt-4 flex items-center gap-1"><i data-lucide="arrow-right" class="w-4 h-4"></i> Open library</p></a>
         </div>
       </div>
     </section>
 
-    <!-- ================================================================= -->
-    <!-- SHADCN SERMONS & MEDIA VAULT (MESSAGE)                            -->
-    <!-- ================================================================= -->
-    <section id="sermons" class="py-24 px-6 md:px-12 bg-white">
-      <div class="max-w-6xl mx-auto">
-        <div class="flex flex-col md:flex-row md:items-end justify-between mb-12">
-          <div>
-            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold tracking-wider uppercase bg-blue-50 text-blue-600 border border-blue-200 mb-3">
-              <i data-lucide="radio" class="w-3.5 h-3.5"></i>
-              Spiritual Food
-            </div>
-            <h2 class="text-3xl md:text-5xl font-black tracking-tight text-zinc-950 font-montserrat">
-              Apostolic Audio Vault
-            </h2>
-          </div>
-          <div class="mt-4 md:mt-0 flex gap-2">
-            <button onclick="filterSermons('all')" class="sermon-filter-btn px-4 py-2 text-xs font-semibold rounded-lg bg-zinc-900 text-white">All</button>
-            <button onclick="filterSermons('doctrine')" class="sermon-filter-btn px-4 py-2 text-xs font-semibold rounded-lg bg-zinc-100 text-zinc-700 hover:bg-zinc-200">Doctrine</button>
-            <button onclick="filterSermons('prayer')" class="sermon-filter-btn px-4 py-2 text-xs font-semibold rounded-lg bg-zinc-100 text-zinc-700 hover:bg-zinc-200">Prayer</button>
-            <button onclick="filterSermons('spirit')" class="sermon-filter-btn px-4 py-2 text-xs font-semibold rounded-lg bg-zinc-100 text-zinc-700 hover:bg-zinc-200">Holy Spirit</button>
-          </div>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="sermons-grid">
-          
-          <!-- Sermon 1 -->
-          <div class="shadcn-card p-6 sermon-card" data-category="doctrine">
-            <div class="flex items-center justify-between text-xs text-zinc-400 font-mono mb-3">
-              <span>Apostle Arome Osayi</span>
-              <span>1h 24m</span>
-            </div>
-            <h3 class="font-bold text-lg text-zinc-900 mb-2">The Apostolic Landmark: Ancient Paths</h3>
-            <p class="text-zinc-500 text-xs mb-4">A treatise on the eternal blueprints of spiritual order and foundational truth.</p>
-            
-            <audio controls class="w-full h-8 mb-4">
-              <source src="https://traffic.libsyn.com/preview/rcnministries/sample.mp3" type="audio/mpeg">
-              Your browser does not support audio element.
-            </audio>
-
-            <div class="flex items-center justify-between pt-2 border-t border-zinc-100 text-xs font-medium">
-              <span class="text-blue-600 font-semibold">Series: Rebirth</span>
-              <a href="https://www.youtube.com/@RCNWarri" target="_blank" class="hover:text-red-600 flex items-center gap-1">
-                <i data-lucide="youtube" class="w-4 h-4"></i> YouTube
-              </a>
-            </div>
-          </div>
-
-          <!-- Sermon 2 -->
-          <div class="shadcn-card p-6 sermon-card" data-category="prayer">
-            <div class="flex items-center justify-between text-xs text-zinc-400 font-mono mb-3">
-              <span>Evang. Kesiena Esiri</span>
-              <span>1h 10m</span>
-            </div>
-            <h3 class="font-bold text-lg text-zinc-900 mb-2">Building An Unshakable Prayer Altar</h3>
-            <p class="text-zinc-500 text-xs mb-4">Practical mechanics of sustaining the fire of consecration and intercession daily.</p>
-            
-            <audio controls class="w-full h-8 mb-4">
-              <source src="https://traffic.libsyn.com/preview/rcnministries/sample.mp3" type="audio/mpeg">
-              Your browser does not support audio element.
-            </audio>
-
-            <div class="flex items-center justify-between pt-2 border-t border-zinc-100 text-xs font-medium">
-              <span class="text-emerald-600 font-semibold">Series: Altar of Fire</span>
-              <a href="https://www.youtube.com/@RCNWarri" target="_blank" class="hover:text-red-600 flex items-center gap-1">
-                <i data-lucide="youtube" class="w-4 h-4"></i> YouTube
-              </a>
-            </div>
-          </div>
-
-          <!-- Sermon 3 -->
-          <div class="shadcn-card p-6 sermon-card" data-category="spirit">
-            <div class="flex items-center justify-between text-xs text-zinc-400 font-mono mb-3">
-              <span>Apostle Arome Osayi</span>
-              <span>1h 45m</span>
-            </div>
-            <h3 class="font-bold text-lg text-zinc-900 mb-2">Dimensions of the Spirit: Glory & Power</h3>
-            <p class="text-zinc-500 text-xs mb-4">Unlocking the supernatural ministry of the Holy Spirit in this present age.</p>
-            
-            <audio controls class="w-full h-8 mb-4">
-              <source src="https://traffic.libsyn.com/preview/rcnministries/sample.mp3" type="audio/mpeg">
-              Your browser does not support audio element.
-            </audio>
-
-            <div class="flex items-center justify-between pt-2 border-t border-zinc-100 text-xs font-medium">
-              <span class="text-purple-600 font-semibold">Series: Supernatural</span>
-              <a href="https://www.youtube.com/@RCNWarri" target="_blank" class="hover:text-red-600 flex items-center gap-1">
-                <i data-lucide="youtube" class="w-4 h-4"></i> YouTube
-              </a>
-            </div>
-          </div>
-
-        </div>
-      </div>
+    <!-- ================= TESTIMONIES ================= -->
+    <section class="py-16 px-6 md:px-12 bg-zinc-50 border-y border-zinc-200 text-center">
+      <p class="text-xs tracking-[.3em] uppercase text-zinc-400 mb-3">Testimonies</p>
+      <h2 class="font-anton text-3xl md:text-5xl uppercase">God has been so good to me&hellip;</h2>
     </section>
 
-    <!-- ================================================================= -->
-    <!-- SHADCN PARTNERSHIP & SANCTUARY PROJECT (PARTNER WITH US)          -->
-    <!-- ================================================================= -->
-    <section id="giving" class="py-24 px-6 md:px-12 bg-white">
-      <div class="max-w-6xl mx-auto">
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-          
-          <div class="lg:col-span-6 space-y-6">
-            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold tracking-wider uppercase bg-amber-50 text-amber-700 border border-amber-200">
-              <i data-lucide="heart-handshake" class="w-3.5 h-3.5"></i>
-              Kingdom Partnership
-            </div>
-
-            <h2 class="text-3xl md:text-5xl font-black tracking-tight text-zinc-950 font-montserrat">
-              Partner with the Apostolic Sanctuary
-            </h2>
-
-            <p class="text-zinc-600 text-sm md:text-base leading-relaxed">
-              This ministry is saddled with the noble task to secure a permanent territory and erect a befitting temple for perpetual prayer and worship to our God in Warri.
-            </p>
-
-            <div class="space-y-4 pt-2">
-              <div class="flex items-start gap-3">
-                <div class="w-6 h-6 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center mt-0.5">
-                  <i data-lucide="check" class="w-3.5 h-3.5"></i>
-                </div>
-                <div>
-                  <h4 class="font-bold text-sm text-zinc-900">Land Acquisition & Sanctuary Construction</h4>
-                  <p class="text-xs text-zinc-500">Building a permanent apostolic hub and training center in Delta State.</p>
-                </div>
-              </div>
-
-              <div class="flex items-start gap-3">
-                <div class="w-6 h-6 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center mt-0.5">
-                  <i data-lucide="check" class="w-3.5 h-3.5"></i>
-                </div>
-                <div>
-                  <h4 class="font-bold text-sm text-zinc-900">24/7 Perpetual Prayer Altar Support</h4>
-                  <p class="text-xs text-zinc-500">Supporting consecrated intercessors keeping the altar active day and night.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="lg:col-span-6">
-            <div class="shadcn-card p-8 bg-zinc-950 text-white border border-zinc-800 shadow-2xl relative">
-              <div class="flex items-center justify-between pb-6 border-b border-zinc-800 mb-6">
-                <div>
-                  <span class="text-xs font-mono uppercase text-blue-400">Direct Bank Giving</span>
-                  <h3 class="text-xl font-bold">RCN Warri Accounts</h3>
-                </div>
-                <div class="p-2.5 rounded-xl bg-zinc-900 border border-zinc-800 text-blue-400">
-                  <i data-lucide="landmark" class="w-5 h-5"></i>
-                </div>
-              </div>
-
-              <div class="space-y-4">
-                
-                <!-- Account 1 -->
-                <div class="p-4 rounded-xl bg-zinc-900/90 border border-zinc-800 flex items-center justify-between">
-                  <div>
-                    <span class="block text-xs text-zinc-400 uppercase font-mono">Zenith Bank &bull; Naira Account</span>
-                    <span class="block text-xl font-mono font-bold text-white tracking-wider">1015648892</span>
-                    <span class="text-xs text-zinc-400">Remnant Christian Network Warri</span>
-                  </div>
-                  <button onclick="copyAccount('1015648892', 'Zenith Bank')" class="px-3.5 py-2 text-xs font-semibold rounded-lg bg-zinc-800 hover:bg-zinc-700 text-white flex items-center gap-1.5 transition-colors">
-                    <i data-lucide="copy" class="w-3.5 h-3.5"></i> Copy
-                  </button>
-                </div>
-
-                <!-- Account 2 -->
-                <div class="p-4 rounded-xl bg-zinc-900/90 border border-zinc-800 flex items-center justify-between">
-                  <div>
-                    <span class="block text-xs text-zinc-400 uppercase font-mono">GTBank &bull; Sanctuary Project</span>
-                    <span class="block text-xl font-mono font-bold text-white tracking-wider">0456123984</span>
-                    <span class="text-xs text-zinc-400">Remnant Christian Network Building</span>
-                  </div>
-                  <button onclick="copyAccount('0456123984', 'GTBank')" class="px-3.5 py-2 text-xs font-semibold rounded-lg bg-zinc-800 hover:bg-zinc-700 text-white flex items-center gap-1.5 transition-colors">
-                    <i data-lucide="copy" class="w-3.5 h-3.5"></i> Copy
-                  </button>
-                </div>
-
-              </div>
-
-              <div class="mt-8 pt-6 border-t border-zinc-800 flex flex-col sm:flex-row items-center justify-between gap-4">
-                <span class="text-xs text-zinc-400">Online Giving via Paystack / Card:</span>
-                <a href="https://paystack.com" target="_blank" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-500 text-white font-medium text-xs px-5 py-2.5 rounded-lg transition-colors">
-                  <i data-lucide="credit-card" class="w-4 h-4"></i> Pay Online Now
-                </a>
-              </div>
-            </div>
-          </div>
-
-        </div>
-      </div>
-    </section>
-
-    <!-- ================================================================= -->
-    <!-- SHADCN FOOTER                                                     -->
-    <!-- ================================================================= -->
-    <footer class="bg-zinc-950 text-white border-t border-zinc-800 py-16 px-6 md:px-12">
-      <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-10">
-        
-        <div class="space-y-4">
-          <div class="flex items-center gap-2">
-            <img src="wp-content/uploads/rcn-warri-logo.png" alt="RCN" class="h-10 w-auto object-contain bg-white rounded p-1">
-          </div>
-          <p class="text-xs text-zinc-400 leading-relaxed">
-            Remnant Christian Network Warri &bull; Striving towards the rebirth of apostolic Christianity in Nigeria and the nations of the earth.
-          </p>
-        </div>
-
+    <!-- ================= PARTNER ================= -->
+    <section id="giving" class="py-20 px-6 md:px-12 bg-white">
+      <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
         <div>
-          <h4 class="font-bold text-sm mb-4 text-zinc-200 uppercase font-mono tracking-wider">Quick Links</h4>
-          <ul class="space-y-2 text-xs text-zinc-400">
-            <li><a href="#intro" class="hover:text-white transition-colors">Home Stage</a></li>
-            <li><a href="#winepress" class="hover:text-white transition-colors">Winepress Altar</a></li>
-            <li><a href="#pillars" class="hover:text-white transition-colors">The 4 Pillars</a></li>
-            <li><a href="#services" class="hover:text-white transition-colors">Service Times</a></li>
-            <li><a href="#sermons" class="hover:text-white transition-colors">Audio Messages</a></li>
-            <li><a href="#giving" class="hover:text-white transition-colors">Sanctuary Giving</a></li>
+          <p class="text-xs tracking-[.3em] uppercase text-amber-600 mb-3">Partner With Us</p>
+          <h2 class="font-anton text-4xl md:text-6xl uppercase leading-none">Build the Sanctuary</h2>
+          <p class="text-zinc-600 mt-5 leading-relaxed">This ministry is saddled with a huge task to secure a land and build a befitting sanctuary for worship and prayers to our God. We desire volunteered time and skill to fit the needs that arise in-house and commitment of financial resources on periodic basis as each partner is able.</p>
+        </div>
+        <div class="rounded-2xl bg-zinc-950 text-white p-7">
+          <h3 class="font-anton text-2xl mb-5">Give Online</h3>
+          <a href="paystack-give/index.html" class="w-full inline-flex justify-center items-center gap-2 bg-white text-black font-semibold py-3 rounded-lg hover:bg-zinc-200"><i data-lucide="credit-card" class="w-4 h-4"></i> Give via Paystack</a>
+          <a href="partnership/index.html" class="w-full inline-flex justify-center items-center gap-2 mt-3 border border-zinc-700 py-3 rounded-lg hover:bg-zinc-900"><i data-lucide="heart-handshake" class="w-4 h-4"></i> Become a Partner</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= FOOTER ================= -->
+    <footer class="bg-zinc-950 text-white py-14 px-6 md:px-12">
+      <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-10">
+        <div>
+          <img src="../images/rcn-logo.png" alt="RCN Warri" class="h-14 w-auto bg-white rounded p-1">
+          <p class="text-xs text-zinc-400 mt-4">Remnant Christian Network Warri &bull; Striving towards the rebirth of Apostolic Christianity.</p>
+        </div>
+        <div>
+          <h4 class="font-anton text-lg mb-3">Pages</h4>
+          <ul class="space-y-2 text-sm text-zinc-400">
+            <li><a href="who-we-are/index.html" class="hover:text-white">Who We Are</a></li>
+            <li><a href="prayer-cells/index.html" class="hover:text-white">Prayer Hubs</a></li>
+            <li><a href="pastoral-team/index.html" class="hover:text-white">Pastoral Team</a></li>
+            <li><a href="contact/index.html" class="hover:text-white">Contact</a></li>
           </ul>
         </div>
-
         <div>
-          <h4 class="font-bold text-sm mb-4 text-zinc-200 uppercase font-mono tracking-wider">Service Watches</h4>
-          <ul class="space-y-2 text-xs text-zinc-400">
-            <li>Sunday Celebration: 8:00 AM</li>
-            <li>Tuesday Bible Doctrine: 5:00 PM</li>
-            <li>Friday Miracle Night: 5:30 PM</li>
-            <li>Daily Watches: 12:00 AM, 06:00 AM</li>
-          </ul>
-        </div>
-
-        <div>
-          <h4 class="font-bold text-sm mb-4 text-zinc-200 uppercase font-mono tracking-wider">Connect With Us</h4>
-          <p class="text-xs text-zinc-400 mb-4">Warri, Delta State, Nigeria</p>
+          <h4 class="font-anton text-lg mb-3">Connect</h4>
           <div class="flex gap-3">
-            <a href="https://www.youtube.com/@RCNWarri" target="_blank" class="w-8 h-8 rounded-full bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-400 hover:text-white hover:border-zinc-700">
-              <i data-lucide="youtube" class="w-4 h-4"></i>
-            </a>
-            <a href="https://web.facebook.com/kesienaesiri" target="_blank" class="w-8 h-8 rounded-full bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-400 hover:text-white hover:border-zinc-700">
-              <i data-lucide="facebook" class="w-4 h-4"></i>
-            </a>
-            <a href="https://twitter.com/KesienaEsiri" target="_blank" class="w-8 h-8 rounded-full bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-400 hover:text-white hover:border-zinc-700">
-              <i data-lucide="twitter" class="w-4 h-4"></i>
-            </a>
-            <a href="https://www.instagram.com/kesienaesiri/" target="_blank" class="w-8 h-8 rounded-full bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-400 hover:text-white hover:border-zinc-700">
-              <i data-lucide="instagram" class="w-4 h-4"></i>
-            </a>
+            <a href="https://www.youtube.com/@RCNWarri" target="_blank" class="w-9 h-9 rounded-full bg-zinc-900 flex items-center justify-center hover:bg-zinc-800"><i data-lucide="youtube" class="w-4 h-4"></i></a>
+            <a href="https://web.facebook.com/kesienaesiri" target="_blank" class="w-9 h-9 rounded-full bg-zinc-900 flex items-center justify-center hover:bg-zinc-800"><i data-lucide="facebook" class="w-4 h-4"></i></a>
+            <a href="https://www.instagram.com/kesienaesiri/" target="_blank" class="w-9 h-9 rounded-full bg-zinc-900 flex items-center justify-center hover:bg-zinc-800"><i data-lucide="instagram" class="w-4 h-4"></i></a>
           </div>
+          <p class="text-xs text-zinc-500 mt-4">Warri, Delta State, Nigeria</p>
         </div>
-
       </div>
-
-      <div class="max-w-6xl mx-auto mt-12 pt-6 border-t border-zinc-900 flex flex-col sm:flex-row items-center justify-between text-xs text-zinc-500">
-        <div>&copy; 2026 Remnant Christian Network Warri. All Rights Reserved.</div>
-        <div class="mt-2 sm:mt-0">Accurate Apostolic Patterns.</div>
-      </div>
+      <p class="max-w-6xl mx-auto mt-10 pt-6 border-t border-zinc-900 text-xs text-zinc-500">&copy; 2026 Remnant Christian Network Warri.</p>
     </footer>
-
   </div>
 
-  <!-- COPY ACCOUNT TOAST -->
-  <div id="copy-toast" class="bg-zinc-900 text-white border border-zinc-700 px-5 py-3 rounded-xl shadow-2xl flex items-center gap-3">
-    <div class="w-7 h-7 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center">
-      <i data-lucide="check" class="w-4 h-4"></i>
-    </div>
-    <div>
-      <span class="block text-xs font-semibold text-white">Copied to Clipboard!</span>
-      <span class="block text-[11px] text-zinc-400" id="toast-desc">Account number copied.</span>
-    </div>
-  </div>
-
-  <!-- ================================================================= -->
-  <!-- SCRIPT LOGIC: R -> C -> N -> WARRI (ANTON FONT) + 3D BANNERS      -->
-  <!-- ================================================================= -->
   <script>
-    // Initialize Lucide icons
-    if (window.lucide) {
-      lucide.createIcons();
-    }
+    if (window.lucide) lucide.createIcons();
 
-    // Register GSAP & ScrollTrigger
-    gsap.registerPlugin(ScrollTrigger);
+    gsap.registerPlugin(ScrollTrigger, MorphSVGPlugin);
 
-    // ==============================================================
-    // HERO SCROLL ANIMATION: R -> C -> N -> WARRI (ANTON FONT)
-    // ==============================================================
-    const rElem = document.querySelector('#letter-r');
-    const cElem = document.querySelector('#letter-c');
-    const nElem = document.querySelector('#letter-n');
-    const warriElem = document.querySelector('#letter-warri');
-    const indicator = document.querySelector('#letter-indicator');
+    // ---------- Anton glyph outlines (font units, extracted from Anton-Regular.ttf) ----------
+    const SHAPES = {
+      R: { d: "M78 1760V0H618Q753 0 822.0 61.5Q891 123 914.5 233.5Q938 344 938 493Q938 637 901.5 723.0Q865 809 764 842Q847 859 880.5 924.5Q914 990 914 1094V1760H567V1071Q567 994 535.5 975.5Q504 957 434 957V1760ZM436 652H521Q594 652 594 493Q594 390 578.0 358.0Q562 326 518 326H436Z", box: [78, 0, 860, 1760], word: "REMNANT" },
+      C: { d: "M488 1776Q297 1776 180.5 1657.0Q64 1538 64 1324V512Q64 256 165.5 120.0Q267 -16 496 -16Q621 -16 718.5 30.0Q816 76 872.0 167.5Q928 259 928 398V702H578V442Q578 363 558.0 335.5Q538 308 496 308Q447 308 430.0 343.5Q413 379 413 438V1319Q413 1392 434.5 1422.0Q456 1452 496 1452Q541 1452 559.5 1415.0Q578 1378 578 1319V1002H932V1335Q932 1567 815.0 1671.5Q698 1776 488 1776Z", box: [64, -16, 868, 1792], word: "CHRISTIAN" },
+      N: { d: "M78 1760V0H440L602 843V0H942V1760H598L422 880V1760Z", box: [78, 0, 864, 1760], word: "NETWORK" },
+      WARRI: { d: "M216 1760 27 0H371L468 1111L567 0H895L989 1111L1083 0H1431L1239 1760H817L729 913L645 1760ZM1528 1760 1698 0H2295L2462 1760H2129L2104 1476H1892L1870 1760ZM1917 1195H2077L2000 300H1984ZM2610 1760V0H3150Q3285 0 3354.0 61.5Q3423 123 3446.5 233.5Q3470 344 3470 493Q3470 637 3433.5 723.0Q3397 809 3296 842Q3379 859 3412.5 924.5Q3446 990 3446 1094V1760H3099V1071Q3099 994 3067.5 975.5Q3036 957 2966 957V1760ZM2968 652H3053Q3126 652 3126 493Q3126 390 3110.0 358.0Q3094 326 3050 326H2968ZM3626 1760V0H4166Q4301 0 4370.0 61.5Q4439 123 4462.5 233.5Q4486 344 4486 493Q4486 637 4449.5 723.0Q4413 809 4312 842Q4395 859 4428.5 924.5Q4462 990 4462 1094V1760H4115V1071Q4115 994 4083.5 975.5Q4052 957 3982 957V1760ZM3984 652H4069Q4142 652 4142 493Q4142 390 4126.0 358.0Q4110 326 4066 326H3984ZM4626 1760V0H4966V1760Z", box: [27, 0, 4939, 1760], word: "WARRI" }
+    };
 
-    const heroTimeline = gsap.timeline({
-      defaults: { ease: 'power2.inOut' }
+    // viewBox tightly around each shape (+2% padding) so every step auto-fits & stays centered
+    const vb = ({ box: [x, y, w, h] }) => {
+      const p = Math.max(w, h) * 0.02;
+      return `${x - p} ${y - p} ${w + 2 * p} ${h + 2 * p}`;
+    };
+
+    const svg = document.getElementById('hero-svg');
+    const path = document.getElementById('letters');
+    const word = document.getElementById('hero-word');
+    svg.setAttribute('viewBox', vb(SHAPES.R));
+
+    const order = ['R', 'C', 'N', 'WARRI'];
+    const tl = gsap.timeline({ defaults: { ease: 'power1.inOut', duration: 1 } });
+
+    order.slice(1).forEach((key, i) => {
+      const at = i * 1.25;                  // short hold between letters
+      tl.to(path, { morphSVG: { shape: SHAPES[key].d, type: 'linear' } }, at)
+        .to(svg, { attr: { viewBox: vb(SHAPES[key]) } }, at);
     });
+    tl.to({}, { duration: 0.75 });          // hold WARRI centered while still pinned
+    tl.to('#intro .bar-top', { scaleX: 1, duration: tl.duration(), ease: 'none' }, 0)
+      .to('#intro .bar-bottom', { scaleX: 1, duration: tl.duration(), ease: 'none' }, 0);
 
-    // Phase 1: R fades/scales slightly, C appears (0% to 25%)
-    heroTimeline.to(rElem, {
-      opacity: 0,
-      scale: 1.15,
-      duration: 2,
-      onStart: () => {
-        indicator.innerHTML = '<span class="w-2 h-2 rounded-full bg-blue-600 animate-pulse"></span> R &bull; REMNANT';
-      }
-    })
-    .to(cElem, {
-      opacity: 1,
-      scale: 1,
-      duration: 2,
-      onStart: () => {
-        indicator.innerHTML = '<span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> C &bull; CHRISTIAN';
-      }
-    }, "-=1.2")
-
-    // Phase 2: C fades/scales slightly, N appears (25% to 50%)
-    .to(cElem, {
-      opacity: 0,
-      scale: 1.15,
-      duration: 2
-    })
-    .to(nElem, {
-      opacity: 1,
-      scale: 1,
-      duration: 2,
-      onStart: () => {
-        indicator.innerHTML = '<span class="w-2 h-2 rounded-full bg-purple-600 animate-pulse"></span> N &bull; NETWORK';
-      }
-    }, "-=1.2")
-
-    // Phase 3: N transitions into WARRI in Anton font matching mockup image (50% to 80%)
-    .to(nElem, {
-      opacity: 0,
-      scale: 1.15,
-      duration: 2
-    })
-    .to(warriElem, {
-      opacity: 1,
-      scale: 1,
-      duration: 2.5,
-      onStart: () => {
-        indicator.innerHTML = '<span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span> WARRI &bull; APOSTOLIC SANCTUARY';
-      }
-    }, "-=1.2")
-
-    // Border Lines Scale continuously
-    .to('.border-top', { scaleX: 1, duration: 8 }, 0)
-    .to('#intro .border-bottom', { scaleX: 1, duration: 8 }, 0);
+    // caption follows the morph progress
+    const labelAt = p => p < 0.12 ? 'R' : p < 0.42 ? 'C' : p < 0.70 ? 'N' : 'WARRI';
+    let current = 'R';
 
     ScrollTrigger.create({
       trigger: '#intro',
-      pin: true,
-      animation: heroTimeline,
-      scrub: 0.6,
       start: 'top top',
-      end: '+=200%'
+      end: () => '+=' + Math.round(window.innerHeight * 2.5),
+      pin: true,
+      scrub: 0.6,
+      animation: tl,
+      invalidateOnRefresh: true,
+      onUpdate: self => {
+        const k = labelAt(self.progress);
+        if (k !== current) { current = k; word.textContent = SHAPES[k].word; }
+      }
     });
 
-    // ==============================================================
-    // (2) 3D PERSPECTIVE SCROLL BANNERS
-    // ==============================================================
-    gsap.set(".banner3d-1", { perspectiveOrigin: "center -100vh"});
-    gsap.set(".banner3d-2", { perspectiveOrigin: "center -100vh"});
-    gsap.set(".banner3d-3", { perspectiveOrigin: "center -100vh"});
-    gsap.set(".banner3d-4", { perspectiveOrigin: "left -100vh"});
-
-    gsap.to(".banner3d-1", {
-      scrollTrigger: {
-        trigger: ".banner3d-1",
-        scrub: true,
-        start: "top bottom",
-        end: "bottom top"
-      },
-      perspectiveOrigin: "center 100vh",
-      ease: "none"
-    });
-
-    gsap.to(".banner3d-2", {
-      scrollTrigger: {
-        trigger: ".banner3d-2",
-        scrub: true,
-        start: "top bottom",
-        end: "bottom top"
-      },
-      perspectiveOrigin: "center 100vh",
-      ease: "none"
-    });
-
-    gsap.to(".banner3d-3", {
-      scrollTrigger: {
-        trigger: ".banner3d-3",
-        scrub: true,
-        start: "top bottom",
-        end: "bottom top"
-      },
-      perspectiveOrigin: "center 100vh",
-      ease: "none"
-    });
-
-    gsap.to(".banner3d-4", {
-      scrollTrigger: {
-        trigger: ".banner3d-4",
-        scrub: true,
-        start: "top bottom",
-        end: "bottom top"
-      },
-      perspectiveOrigin: "left 100vh",
-      ease: "none"
-    });
-
-    // UI Helper Functions
-    function copyAccount(accNum, bankName) {
-      navigator.clipboard.writeText(accNum).then(() => {
-        const toast = document.getElementById('copy-toast');
-        const desc = document.getElementById('toast-desc');
-        if (desc) desc.innerText = `${bankName} (${accNum}) copied!`;
-        if (toast) {
-          toast.classList.add('show');
-          setTimeout(() => toast.classList.remove('show'), 3000);
-        }
+    // ---------- 3D perspective banners ----------
+    [['.banner3d-1', 'center'], ['.banner3d-2', 'center'], ['.banner3d-3', 'center'], ['.banner3d-4', 'left']].forEach(([sel, x]) => {
+      gsap.set(sel, { perspectiveOrigin: `${x} -100vh` });
+      gsap.to(sel, {
+        perspectiveOrigin: `${x} 100vh`, ease: 'none',
+        scrollTrigger: { trigger: sel, scrub: true, start: 'top bottom', end: 'bottom top' }
       });
-    }
+    });
 
-    function filterSermons(cat) {
-      document.querySelectorAll('.sermon-filter-btn').forEach(btn => {
-        btn.classList.remove('bg-zinc-900', 'text-white');
-        btn.classList.add('bg-zinc-100', 'text-zinc-700');
-      });
-      event.target.classList.remove('bg-zinc-100', 'text-zinc-700');
-      event.target.classList.add('bg-zinc-900', 'text-white');
-
-      document.querySelectorAll('.sermon-card').forEach(card => {
-        if (cat === 'all' || card.getAttribute('data-category') === cat) {
-          card.style.display = 'block';
-        } else {
-          card.style.display = 'none';
-        }
-      });
-    }
+    // recalc after fonts/images load (important on mobile)
+    window.addEventListener('load', () => ScrollTrigger.refresh());
   </script>
 </body>
 </html>
