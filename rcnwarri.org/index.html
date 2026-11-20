@@ -7,10 +7,10 @@
   <meta name="description" content="Remnant Christian Network Warri — Striving towards the rebirth of Apostolic Christianity. Raise, Restore, Revive, Renew.">
   <link rel="icon" href="wp-content/uploads/2023/02/rcnwarri-fav-1-100x100.png" sizes="32x32">
 
-  <!-- Google Fonts: Inter & Montserrat -->
+  <!-- Google Fonts: Anton (Primary Hero Font), Inter, Montserrat, JetBrains Mono -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Montserrat:ital,wght@0,700;0,800;0,900;1,800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@300;400;500;600;700;800;900&family=Montserrat:ital,wght@0,700;0,800;0,900;1,800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
 
   <!-- Tailwind CSS via CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -37,6 +37,7 @@
             }
           },
           fontFamily: {
+            anton: ['Anton', 'sans-serif'],
             sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
             montserrat: ['Montserrat', 'sans-serif'],
             mono: ['JetBrains Mono', 'monospace']
@@ -49,14 +50,11 @@
   <!-- GSAP & ScrollTrigger -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-  <!-- Polymorph JS -->
-  <script src="https://unpkg.com/polymorph-js@latest/dist/polymorph.js"></script>
-
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
 
   <style>
-    /* Base Global Styles matching requested spec */
+    /* Global Base */
     body {
       background-color: #000000;
       font-family: 'Inter', sans-serif;
@@ -66,7 +64,7 @@
       overflow-x: hidden;
     }
 
-    /* Fixed Full-screen Background Video */
+    /* Fixed Full-screen Background Video/GIF Layer with Screen Blend */
     [data-page-background] {
       width: 100%;
       height: 100vh;
@@ -82,7 +80,7 @@
       overflow: hidden;
     }
 
-    [data-page-background] video {
+    [data-page-background] .bg-media {
       width: 100%;
       height: 100%;
       object-fit: cover;
@@ -146,7 +144,7 @@
       flex-direction: column;
       align-items: center;
       text-decoration: none;
-      group: cursor-pointer;
+      cursor: pointer;
       transition: transform 0.2s;
     }
 
@@ -199,7 +197,7 @@
       }
     }
 
-    /* Section 1: Hero & Morph Animation (R -> C -> N -> WARRI on same position) */
+    /* Section 1: Hero & Morph Stage with ANTON font */
     [data-page-section="one"] {
       width: 100%;
       height: 100vh;
@@ -209,21 +207,6 @@
       flex-direction: column;
       position: relative;
       background: #ffffff;
-    }
-
-    .intro-letters {
-      width: 100%;
-      max-width: 70vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-    }
-
-    @media screen and (max-width: 760px) {
-      .intro-letters {
-        padding: 0 6vw;
-      }
     }
 
     .border-top {
@@ -242,6 +225,47 @@
       transform: scaleX(0);
       transform-origin: 100% 50%;
       margin-top: auto;
+    }
+
+    /* Hero Center Stage for Anton Letters */
+    .hero-center-stage {
+      position: relative;
+      width: 100%;
+      height: 65vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .anton-hero-letter {
+      font-family: 'Anton', sans-serif;
+      color: #000000;
+      font-weight: 900;
+      text-transform: uppercase;
+      line-height: 0.85;
+      text-align: center;
+      user-select: none;
+      position: absolute;
+      left: 0;
+      right: 0;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      letter-spacing: -0.02em;
+    }
+
+    /* Single letter size */
+    .single-letter {
+      font-size: clamp(12rem, 36vw, 32rem);
+    }
+
+    /* Word WARRI size matching mockup image */
+    .word-letter {
+      font-size: clamp(6.5rem, 21vw, 22rem);
+      letter-spacing: -0.01em;
     }
 
     /* Section 2: 3D Perspective Scroll Banners */
@@ -405,7 +429,7 @@
 
     .banner-img-1 {
       width: 45%;
-      background: url('wp-content/uploads/2023/02/papa-church-bg-scaled.jpg') no-repeat;
+      background: url('wp-content/uploads/2023/04/papa-church-bg-scaled.jpg') no-repeat;
       background-size: cover;
       background-position: center;
       border-radius: 0 8px 8px 0;
@@ -521,21 +545,17 @@
 </head>
 <body>
 
-  <!-- BACKGROUND VIDEO: Fullscreen Fixed Ambient Motion with Canvas Fallback -->
+  <!-- BACKGROUND VIDEO/GIF: Specified by user with mix-blend-mode: screen -->
   <div data-page-background>
-    <video autoplay loop muted playsinline id="bg-video">
-      <source src="https://assets.mixkit.co/videos/preview/mixkit-nebula-space-dust-and-bright-stars-41008-large.mp4" type="video/mp4">
-      <source src="https://cdn.pixabay.com/video/2019/04/16/22818-330669956_large.mp4" type="video/mp4">
-    </video>
-    <canvas id="bg-canvas" class="absolute inset-0 w-full h-full"></canvas>
+    <img src="images/601b796d65b6a0b20c43c9b16f57d0f7-ezgif.com-speed.gif" alt="Ambient Motion Background" class="bg-media">
   </div>
 
-  <!-- PAGE CONTAINER (90vw centered layout matching the requested design) -->
+  <!-- PAGE CONTAINER (90vw Centered Canvas matching uploaded reference) -->
   <div data-page-container id="page-wrapper">
 
-    <!-- HEADER: Reconstructed to strictly match uploaded image -->
+    <!-- HEADER: Matching uploaded mockup image -->
     <header class="reference-header">
-      <!-- Left: Uploaded Logo PNG -->
+      <!-- Left: Uploaded Official Logo PNG -->
       <a href="#intro" class="logo-container" title="Remnant Christian Network Warri">
         <img src="wp-content/uploads/rcn-warri-logo.png" alt="Remnant Christian Network Warri">
       </a>
@@ -577,28 +597,31 @@
     </header>
 
     <!-- ================================================================= -->
-    <!-- (1) HERO & MORPH ANIMATION: R -> C -> N -> WARRI                  -->
-    <!-- (On the SAME page & position with background video shining through) -->
+    <!-- (1) HERO & SCROLL ANIMATION: R -> C -> N -> WARRI (ANTON FONT)     -->
+    <!-- (In the middle of the exact same position, layer with screen blend)-->
     <!-- ================================================================= -->
     <section id="intro" data-page-section="one">
       <div class="border-top"></div>
       
-      <div class="intro-letters flex flex-col items-center justify-center">
-        <!-- Main Central SVG Viewport -->
-        <svg id="hero-svg" viewBox="0 0 360 430" width="100%" height="100%" style="overflow: visible;">
-          <!-- Active morphing path: starts as R, morphs to C, morphs to N, then to WARRI on same position -->
-          <path id="letters" fill="#000000" d="M54 426V269.4h136.2l90 156.6H342l-95.4-163.2C294 249 331.2 213 331.2 135c0-99.6-67.8-135-135.6-135H0v426h54zm130.2-208.2H54V52.2h130.2c68.4 0 90 34.8 90 82.8s-21.6 82.8-90 82.8z"/>
-        </svg>
+      <div class="hero-center-stage">
+        <!-- Letter R in Anton font -->
+        <div id="letter-r" class="anton-hero-letter single-letter">R</div>
+        <!-- Letter C in Anton font -->
+        <div id="letter-c" class="anton-hero-letter single-letter opacity-0 pointer-events-none">C</div>
+        <!-- Letter N in Anton font -->
+        <div id="letter-n" class="anton-hero-letter single-letter opacity-0 pointer-events-none">N</div>
+        <!-- Word WARRI in Anton font matching uploaded image -->
+        <div id="letter-warri" class="anton-hero-letter word-letter opacity-0 pointer-events-none">WARRI</div>
+      </div>
 
-        <!-- Dynamic Indicator Below Letter -->
-        <div class="mt-6 text-center">
-          <span id="letter-indicator" class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-mono font-bold tracking-widest uppercase bg-zinc-100 text-zinc-900 border border-zinc-300 shadow-sm transition-all duration-300">
-            <span class="w-2 h-2 rounded-full bg-blue-600 animate-pulse"></span>
-            R &bull; REMNANT
-          </span>
-          <div class="text-[11px] uppercase tracking-widest text-zinc-400 font-mono mt-2">
-            Scroll down to morph &bull; R &rarr; C &rarr; N &rarr; WARRI
-          </div>
+      <!-- Live Dynamic Status Indicator -->
+      <div class="text-center pb-2 z-20">
+        <span id="letter-indicator" class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-mono font-bold tracking-widest uppercase bg-zinc-100 text-zinc-900 border border-zinc-300 shadow-sm transition-all duration-300">
+          <span class="w-2 h-2 rounded-full bg-blue-600 animate-pulse"></span>
+          R &bull; REMNANT
+        </span>
+        <div class="text-[11px] uppercase tracking-widest text-zinc-400 font-mono mt-1 font-semibold">
+          Scroll down &bull; R &rarr; C &rarr; N &rarr; WARRI
         </div>
       </div>
 
@@ -1185,7 +1208,7 @@
   </div>
 
   <!-- ================================================================= -->
-  <!-- SCRIPT LOGIC: R -> C -> N -> WARRI (ON SAME POSITION) + 3D BANNERS -->
+  <!-- SCRIPT LOGIC: R -> C -> N -> WARRI (ANTON FONT) + 3D BANNERS      -->
   <!-- ================================================================= -->
   <script>
     // Initialize Lucide icons
@@ -1193,174 +1216,78 @@
       lucide.createIcons();
     }
 
-    // Dynamic Ambient Canvas Particle Engine (Ensures 100% immediate glowing motion even offline)
-    (function initBackgroundCanvas() {
-      const canvas = document.getElementById('bg-canvas');
-      if (!canvas) return;
-      const ctx = canvas.getContext('2d');
-      let w = canvas.width = window.innerWidth;
-      let h = canvas.height = window.innerHeight;
-
-      window.addEventListener('resize', () => {
-        w = canvas.width = window.innerWidth;
-        h = canvas.height = window.innerHeight;
-      });
-
-      const particles = [];
-      const colors = ['#2563eb', '#38bdf8', '#818cf8', '#ec4899', '#f59e0b', '#10b981'];
-      for (let i = 0; i < 60; i++) {
-        particles.push({
-          x: Math.random() * w,
-          y: Math.random() * h,
-          r: Math.random() * 60 + 20,
-          dx: (Math.random() - 0.5) * 1.2,
-          dy: (Math.random() - 0.5) * 1.2,
-          color: colors[Math.floor(Math.random() * colors.length)],
-          alpha: Math.random() * 0.5 + 0.2
-        });
-      }
-
-      function render() {
-        ctx.fillStyle = '#000000';
-        ctx.fillRect(0, 0, w, h);
-
-        particles.forEach(p => {
-          p.x += p.dx;
-          p.y += p.dy;
-          if (p.x < -100) p.x = w + 100;
-          if (p.x > w + 100) p.x = -100;
-          if (p.y < -100) p.y = h + 100;
-          if (p.y > h + 100) p.y = -100;
-
-          const grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r);
-          grad.addColorStop(0, p.color);
-          grad.addColorStop(1, 'transparent');
-
-          ctx.globalAlpha = p.alpha;
-          ctx.beginPath();
-          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-          ctx.fillStyle = grad;
-          ctx.fill();
-        });
-
-        requestAnimationFrame(render);
-      }
-      render();
-    })();
-
-    // Robust Fallback Interpolator for Polymorph
-    if (typeof window.polymorph === 'undefined') {
-      window.polymorph = {
-        interpolate: function(paths, options) {
-          const p1 = (typeof paths[0] === 'string') ? paths[0] : paths[0].getAttribute('d');
-          const p2 = (typeof paths[1] === 'string') ? paths[1] : paths[1].getAttribute('d');
-          const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-          const pathA = document.createElementNS("http://www.w3.org/2000/svg", "path");
-          const pathB = document.createElementNS("http://www.w3.org/2000/svg", "path");
-          pathA.setAttribute("d", p1);
-          pathB.setAttribute("d", p2);
-          svg.appendChild(pathA);
-          svg.appendChild(pathB);
-          document.body.appendChild(svg);
-          svg.style.display = "none";
-          const lenA = pathA.getTotalLength() || 1000;
-          const lenB = pathB.getTotalLength() || 1000;
-          const numPoints = 85;
-          const ptsA = [];
-          const ptsB = [];
-          for (let i = 0; i <= numPoints; i++) {
-            ptsA.push(pathA.getPointAtLength((i / numPoints) * lenA));
-            ptsB.push(pathB.getPointAtLength((i / numPoints) * lenB));
-          }
-          svg.remove();
-
-          return function(progress) {
-            if (progress <= 0) return p1;
-            if (progress >= 1) return p2;
-            let d = "M " + (ptsA[0].x + (ptsB[0].x - ptsA[0].x) * progress).toFixed(2) + " " + (ptsA[0].y + (ptsB[0].y - ptsA[0].y) * progress).toFixed(2);
-            for (let i = 1; i <= numPoints; i++) {
-              const x = ptsA[i].x + (ptsB[i].x - ptsA[i].x) * progress;
-              const y = ptsA[i].y + (ptsB[i].y - ptsA[i].y) * progress;
-              d += " L " + x.toFixed(2) + " " + y.toFixed(2);
-            }
-            return d + " Z";
-          };
-        }
-      };
-    }
-
     // Register GSAP & ScrollTrigger
     gsap.registerPlugin(ScrollTrigger);
 
     // ==============================================================
-    // HERO SCROLL ANIMATION: R -> C -> N -> WARRI (ON SAME POSITION)
+    // HERO SCROLL ANIMATION: R -> C -> N -> WARRI (ANTON FONT)
     // ==============================================================
-    const letterElem = document.querySelector('#letters');
+    const rElem = document.querySelector('#letter-r');
+    const cElem = document.querySelector('#letter-c');
+    const nElem = document.querySelector('#letter-n');
+    const warriElem = document.querySelector('#letter-warri');
     const indicator = document.querySelector('#letter-indicator');
 
-    // Letter R (Initial)
-    const letterR = "M54 426V269.4h136.2l90 156.6H342l-95.4-163.2C294 249 331.2 213 331.2 135c0-99.6-67.8-135-135.6-135H0v426h54zm130.2-208.2H54V52.2h130.2c68.4 0 90 34.8 90 82.8s-21.6 82.8-90 82.8z";
-    // Letter C
-    const letterC = "M324 108l-48 36c-24-42-57-60-108-60-78 0-114 60-114 129 0 69 36 129 114 129 51 0 84-18 108-60l48 36c-33 54-84 84-156 84C72 426 0 336 0 213 0 90 72 0 168 0c72 0 123 30 156 108z";
-    // Letter N
-    const letterN = "M0 0h54l168 282V0h54v426h-54L54 144v282H0V0z";
-    // WARRI Stylized Graphic Shape on the same center coordinates
-    const letterWARRI = "M10 130l20 160h26l22-90 22 90h26l32-160h-28l-18 95-20-95h-28l-20 95-18-95H10zm150 0l-30 160h28l8-40h42l8 40h28l-30-160h-54zm12 30h18l12 55h-42l12-55zm80-30v160h28v-65h26l30 65h32l-34-70c20-8 32-26 32-45 0-30-22-45-56-45h-58zm28 25h26c15 0 24 6 24 18s-9 18-24 18h-26v-36z";
+    const heroTimeline = gsap.timeline({
+      defaults: { ease: 'power2.inOut' }
+    });
 
-    const step1 = polymorph.interpolate([letterR, letterC], { addPoints: 0, origin: {x: 0, y: 0}, optimize: 'fill', precision: 4 });
-    const step2 = polymorph.interpolate([letterC, letterN], { addPoints: 0, origin: {x: 0, y: 0}, optimize: 'fill', precision: 4 });
-    const step3 = polymorph.interpolate([letterN, letterWARRI], { addPoints: 0, origin: {x: 0, y: 0}, optimize: 'fill', precision: 4 });
-
-    let val = { p1: 0, p2: 0, p3: 0 };
-
-    let introTimeline = gsap.timeline({defaults: {duration: 4, ease: 'power1.inOut'}});
-
-    // Phase 1: R -> C
-    introTimeline.to(val, {
-      p1: 1,
-      onUpdate: function() {
-        if (letterElem) letterElem.setAttribute("d", step1(val.p1));
-        if (indicator) {
-          if (val.p1 < 0.5) {
-            indicator.innerHTML = '<span class="w-2 h-2 rounded-full bg-blue-600 animate-pulse"></span> R &bull; REMNANT';
-          } else {
-            indicator.innerHTML = '<span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> C &bull; CHRISTIAN';
-          }
-        }
+    // Phase 1: R fades/scales slightly, C appears (0% to 25%)
+    heroTimeline.to(rElem, {
+      opacity: 0,
+      scale: 1.15,
+      duration: 2,
+      onStart: () => {
+        indicator.innerHTML = '<span class="w-2 h-2 rounded-full bg-blue-600 animate-pulse"></span> R &bull; REMNANT';
       }
     })
-    // Phase 2: C -> N
-    .to(val, {
-      p2: 1,
-      onUpdate: function() {
-        if (letterElem) letterElem.setAttribute("d", step2(val.p2));
-        if (indicator) {
-          if (val.p2 < 0.5) {
-            indicator.innerHTML = '<span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> C &bull; CHRISTIAN';
-          } else {
-            indicator.innerHTML = '<span class="w-2 h-2 rounded-full bg-purple-600 animate-pulse"></span> N &bull; NETWORK';
-          }
-        }
+    .to(cElem, {
+      opacity: 1,
+      scale: 1,
+      duration: 2,
+      onStart: () => {
+        indicator.innerHTML = '<span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> C &bull; CHRISTIAN';
       }
+    }, "-=1.2")
+
+    // Phase 2: C fades/scales slightly, N appears (25% to 50%)
+    .to(cElem, {
+      opacity: 0,
+      scale: 1.15,
+      duration: 2
     })
-    // Phase 3: N -> WARRI on the exact same page & position
-    .to(val, {
-      p3: 1,
-      onUpdate: function() {
-        if (letterElem) letterElem.setAttribute("d", step3(val.p3));
-        if (indicator) {
-          indicator.innerHTML = '<span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span> WARRI &bull; APOSTOLIC SANCTUARY';
-        }
+    .to(nElem, {
+      opacity: 1,
+      scale: 1,
+      duration: 2,
+      onStart: () => {
+        indicator.innerHTML = '<span class="w-2 h-2 rounded-full bg-purple-600 animate-pulse"></span> N &bull; NETWORK';
       }
+    }, "-=1.2")
+
+    // Phase 3: N transitions into WARRI in Anton font matching mockup image (50% to 80%)
+    .to(nElem, {
+      opacity: 0,
+      scale: 1.15,
+      duration: 2
     })
-    // Dynamic border expansions
-    .to('.border-top', { scaleX: 1, duration: 12 }, 0)
-    .to('#intro .border-bottom', { scaleX: 1, duration: 12 }, 0);
+    .to(warriElem, {
+      opacity: 1,
+      scale: 1,
+      duration: 2.5,
+      onStart: () => {
+        indicator.innerHTML = '<span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span> WARRI &bull; APOSTOLIC SANCTUARY';
+      }
+    }, "-=1.2")
+
+    // Border Lines Scale continuously
+    .to('.border-top', { scaleX: 1, duration: 8 }, 0)
+    .to('#intro .border-bottom', { scaleX: 1, duration: 8 }, 0);
 
     ScrollTrigger.create({
       trigger: '#intro',
       pin: true,
-      animation: introTimeline,
+      animation: heroTimeline,
       scrub: 0.6,
       start: 'top top',
       end: '+=200%'
